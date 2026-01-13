@@ -23,6 +23,15 @@ body { margin: 0; color: #0f2137; background: radial-gradient(circle at 20% 0%, 
   font-weight: 700;
 }
 
+.logo-pelindo {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  height: 42px;
+}
+.hero { position: relative; }
+
+
 .container {
   padding: 22px;
   display: grid;
@@ -136,3 +145,4 @@ button:active { transform: translateY(1px); }
   background: rgba(255,255,255,.55);
   border-top: 1px solid rgba(15,33,55,.08);
 }
+
