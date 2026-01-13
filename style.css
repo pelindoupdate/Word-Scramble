@@ -153,4 +153,58 @@ button:active { transform: translateY(1px); }
   border-top: 1px solid rgba(15,33,55,.08);
 }
 
+/* =========================
+   ADMIN FORM (VERTICAL)
+========================= */
+.admin-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.admin-form label {
+  font-size: 12px;
+  font-weight: 700;
+  margin-bottom: 6px;
+  display: block;
+  opacity: .85;
+}
+
+.admin-form input,
+.admin-form select {
+  width: 100%;
+  padding: 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(15,33,55,.18);
+}
+
+.admin-form input:focus,
+.admin-form select:focus {
+  outline: none;
+  border-color: rgba(47,143,214,.75);
+  box-shadow: 0 0 0 4px rgba(47,143,214,.12);
+}
+
+.form-row {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-row.grid-3 {
+  display: grid;
+  grid-template-columns: 1fr 1fr auto;
+  gap: 12px;
+}
+
+.form-row .align-end {
+  display: flex;
+  align-items: flex-end;
+}
+
+@media (max-width: 600px) {
+  .form-row.grid-3 {
+    grid-template-columns: 1fr;
+  }
+}
+
 
