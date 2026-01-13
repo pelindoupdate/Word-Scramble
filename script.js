@@ -68,6 +68,8 @@ const playerName = document.getElementById("playerName");
 const playerUnit = document.getElementById("playerUnit");
 const leaderboardEl = document.getElementById("leaderboard");
 const apiStatus = document.getElementById("apiStatus");
+document.getElementById("saveSection").style.display = "none";
+
 
 // Local fallback keys
 const LS_FALLBACK_TOP = "cc_prod_top_fallback_v1";
@@ -420,6 +422,7 @@ saveForm.addEventListener("submit", handleSave);
   }, 10000);
   startRound();
 })();
+
 
 
 
