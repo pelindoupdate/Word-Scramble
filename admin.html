@@ -1,34 +1,75 @@
 <!DOCTYPE html>
-<html>
+<html lang="id">
 <head>
-  <title>Admin – Challenge Corner</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin | Terms Manager</title>
+  <link rel="stylesheet" href="style.css"/>
 </head>
 <body>
-<h2>Admin Input Soal</h2>
 
-<input id="term" placeholder="Istilah (contoh: PELINDO)" />
-<input id="category" placeholder="Kategori" />
-<button onclick="save()">Simpan</button>
+<header class="hero">
+  <div class="hero-left">
+    <div>
+      <h1>ADMIN PANEL</h1>
+      <h2>Input Istilah Scramble</h2>
+      <p>Tambah, aktif/nonaktif, dan kelola database istilah.</p>
+    </div>
+  </div>
+  <div class="hero-right">
+    <img class="logo" src="assets/pelindo-logo.png" alt="Pelindo Logo">
+  </div>
+</header>
+
+<main class="container">
+
+  <section class="panel card">
+    <h3>🔐 Admin Key</h3>
+    <div class="input-row">
+      <input id="adminKey" type="text" placeholder="Masukkan ADMIN KEY..." />
+      <button id="saveKeyBtn" type="button">Simpan Key</button>
+    </div>
+    <div class="hint-box"><small class="muted">Key disimpan di browser (session) agar tidak perlu isi ulang.</small></div>
+  </section>
+
+  <section class="panel card">
+    <h3>➕ Tambah Istilah</h3>
+    <form id="addForm" class="save-form" style="grid-template-columns: 1.2fr 1fr .8fr .6fr auto;">
+      <input id="term" type="text" maxlength="40" placeholder="Istilah (1 kata) contoh: Resilience" required />
+      <input id="category" type="text" maxlength="30" placeholder="Category contoh: Sustainability" />
+      <select id="level">
+        <option value="easy">easy</option>
+        <option value="medium">medium</option>
+        <option value="hard">hard</option>
+      </select>
+      <select id="active">
+        <option value="true">active</option>
+        <option value="false">inactive</option>
+      </select>
+      <button type="submit">Tambah</button>
+    </form>
+    <div id="adminMsg" class="message"></div>
+  </section>
+
+  <section class="panel card">
+    <div class="panel-head">
+      <h3>📚 Daftar Istilah</h3>
+      <button class="ghost" id="refreshBtn" type="button">↻ Refresh</button>
+    </div>
+
+    <div class="table">
+      <div class="row head" style="grid-template-columns: 60px 1.4fr 1fr .7fr .7fr 80px 80px;">
+        <div>ID</div><div>Term</div><div>Category</div><div>Level</div><div>Active</div><div class="right">Toggle</div><div class="right">Delete</div>
+      </div>
+      <div id="termsTable" class="rows"></div>
+    </div>
+  </section>
+
+</main>
 
 <script>
-const API_URL = "PASTE_API_URL";
-
-async function save() {
-  const term = document.getElementById("term").value;
-  const category = document.getElementById("category").value;
-
-  await fetch(API_URL, {
-    method: "POST",
-    headers: {"Content-Type":"application/x-www-form-urlencoded"},
-    body: new URLSearchParams({
-      action:"add_question",
-      term,
-      category
-    })
-  });
-
-  alert("Soal tersimpan");
-}
+  // minimal helper; main admin logic ada di script.js (shared)
 </script>
+<script src="script.js"></script>
 </body>
 </html>
