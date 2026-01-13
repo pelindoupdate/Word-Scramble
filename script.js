@@ -10,6 +10,8 @@ const GAME = "SCRAMBLE";
 const bgm = document.getElementById("bgm");
 bgm.volume = 0.3;
 bgm.play().catch(()=>{});
+const sfxCorrect = document.getElementById("sfxCorrect");
+const sfxWrong = document.getElementById("sfxWrong");
 
 // Word bank
 // const WORD_BANK = [
@@ -169,6 +171,8 @@ function submitAnswer() {
   if (guess === correct) {
     const bonus = Math.min(5, streak);
     applyScore(POINT_CORRECT + bonus);
+    sfxCorrect.currentTime = 0;
+    sfxCorrect.play();
     streak += 1;
     updateStats();
     setMessage(`Benar! +${POINT_CORRECT}+${bonus} 🎉`, "ok");
@@ -178,6 +182,8 @@ function submitAnswer() {
     updateStats();
     setMessage("Belum tepat. Coba lagi 😺", "bad");
     elInput.select();
+    sfxWrong.currentTime = 0;
+    sfxWrong.play();
   }
 }
 
@@ -425,6 +431,7 @@ saveForm.addEventListener("submit", handleSave);
   }, 10000);
   startRound();
 })();
+
 
 
 
