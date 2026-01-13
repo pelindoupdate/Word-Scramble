@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Admin – Challenge Corner</title>
+</head>
+<body>
+<h2>Admin Input Soal</h2>
+
+<input id="term" placeholder="Istilah (contoh: PELINDO)" />
+<input id="category" placeholder="Kategori" />
+<button onclick="save()">Simpan</button>
+
+<script>
+const API_URL = "PASTE_API_URL";
+
+async function save() {
+  const term = document.getElementById("term").value;
+  const category = document.getElementById("category").value;
+
+  await fetch(API_URL, {
+    method: "POST",
+    headers: {"Content-Type":"application/x-www-form-urlencoded"},
+    body: new URLSearchParams({
+      action:"add_question",
+      term,
+      category
+    })
+  });
+
+  alert("Soal tersimpan");
+}
+</script>
+</body>
+</html>
