@@ -1,7 +1,7 @@
 // ============================
 // CONFIG
 // ============================
-const API_URL = "PASTE_URL_WEBAPP_EXEC_KAMU_DI_SINI";
+const API_URL = "https://script.google.com/macros/s/AKfycbyDeM2ICafa74weAD5ttuPqzjsuT3L76Teyz6BKTOyqJFPTBrTPxodk7AES8FHSCL32HA/exec";
 const GAME = "SCRAMBLE";
 
 // IMPORTANT FIX:
@@ -464,3 +464,4 @@ function initAdmin(){
   if(isGamePage) await initGame();
   if(isAdminPage) initAdmin();
 })();
+
