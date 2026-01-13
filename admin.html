@@ -34,7 +34,7 @@
 
   <section class="panel card">
     <h3>➕ Tambah Istilah</h3>
-    <form id="addForm" class="save-form" style="grid-template-columns: 1.2fr 1fr .8fr .6fr auto;">
+    <!-- <form id="addForm" class="save-form" style="grid-template-columns: 1.2fr 1fr .8fr .6fr auto;">
       <input id="term" type="text" maxlength="40" placeholder="Istilah (1 kata) contoh: Resilience" required />
       <input id="category" type="text" maxlength="30" placeholder="Category contoh: Sustainability" />
       <select id="level">
@@ -47,7 +47,44 @@
         <option value="false">inactive</option>
       </select>
       <button type="submit">Tambah</button>
+    </form> -->
+    <form id="addForm" class="admin-form">
+      <div class="form-row">
+        <label>Istilah (1 kata)</label>
+        <input id="term" type="text" maxlength="40"
+          placeholder="Contoh: Resilience" required />
+      </div>
+    
+      <div class="form-row">
+        <label>Kategori</label>
+        <input id="category" type="text" maxlength="30"
+          placeholder="Contoh: Sustainability" />
+      </div>
+    
+      <div class="form-row grid-3">
+        <div>
+          <label>Level</label>
+          <select id="level">
+            <option value="easy">easy</option>
+            <option value="medium">medium</option>
+            <option value="hard">hard</option>
+          </select>
+        </div>
+    
+        <div>
+          <label>Status</label>
+          <select id="active">
+            <option value="true">active</option>
+            <option value="false">inactive</option>
+          </select>
+        </div>
+    
+        <div class="align-end">
+          <button type="submit">➕ Tambah Istilah</button>
+        </div>
+      </div>
     </form>
+
     <div id="adminMsg" class="message"></div>
   </section>
 
