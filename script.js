@@ -1,4 +1,4 @@
-// ============================
+  // ============================
 // Production: Pelindo Scramble + Online Leaderboard (Google Sheets)
 // ============================
 
@@ -203,18 +203,41 @@ async function apiGetTop() {
   return data.rows || [];
 }
 
+
 async function apiSubmitScore(payload) {
   if (!API_URL || API_URL.includes("PASTE_")) throw new Error("API_URL not set");
 
+  const body = new URLSearchParams();
+  body.set("action", "submit");
+  body.set("name", payload.name);
+  body.set("unit", payload.unit || "");
+  body.set("score", String(payload.score));
+  body.set("seconds", String(payload.seconds));
+  body.set("game", payload.game || "SCRAMBLE");
+
   const res = await fetch(API_URL, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ action: "submit", ...payload }),
+    headers: { "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8" },
+    body: body.toString(),
   });
+
   const data = await res.json();
   if (!data.ok) throw new Error(data.error || "Submit failed");
   return data.top || [];
 }
+
+// async function apiSubmitScore(payload) {
+//   if (!API_URL || API_URL.includes("PASTE_")) throw new Error("API_URL not set");
+
+//   const res = await fetch(API_URL, {
+//     method: "POST",
+//     headers: { "Content-Type": "application/json" },
+//     body: JSON.stringify({ action: "submit", ...payload }),
+//   });
+//   const data = await res.json();
+//   if (!data.ok) throw new Error(data.error || "Submit failed");
+//   return data.top || [];
+// }
 
 function renderLeaderboard(rows) {
   if (!rows || !rows.length) {
@@ -255,7 +278,6 @@ async function syncPending() {
   const pending = loadPending();
   if (!pending.length) return;
 
-  // attempt sequentially
   const remaining = [];
   for (const p of pending) {
     try {
@@ -266,6 +288,22 @@ async function syncPending() {
   }
   savePending(remaining);
 }
+
+// async function syncPending() {
+//   const pending = loadPending();
+//   if (!pending.length) return;
+
+//   // attempt sequentially
+//   const remaining = [];
+//   for (const p of pending) {
+//     try {
+//       await apiSubmitScore(p);
+//     } catch {
+//       remaining.push(p);
+//     }
+//   }
+//   savePending(remaining);
+// }
 
 async function refreshTop() {
   try {
@@ -278,6 +316,32 @@ async function refreshTop() {
     setApiStatus("offline", false);
   }
 }
+
+function doPost(e) {
+  try {
+    // support both: form-urlencoded and JSON
+    let payload = {};
+    if (e && e.parameter && e.parameter.action) {
+      payload = {
+        action: e.parameter.action,
+        name: e.parameter.name,
+        unit: e.parameter.unit,
+        score: e.parameter.score,
+        seconds: e.parameter.seconds,
+        game: e.parameter.game,
+      };
+    } else {
+      payload = safeJsonParse(e.postData && e.postData.contents);
+    }
+
+    const action = (payload.action || "").toLowerCase();
+    if (action === "submit") return json(submitScore(payload, e));
+    return json({ ok: false, error: "Unknown action" }, 400);
+  } catch (err) {
+    return json({ ok: false, error: String(err) }, 500);
+  }
+}
+
 
 // Save score handler
 async function handleSave(e) {
@@ -337,5 +401,10 @@ saveForm.addEventListener("submit", handleSave);
   renderLeaderboard(loadFallbackTop());
   await syncPending();
   await refreshTop();
+  setInterval(async () => {
+    await syncPending();
+    await refreshTop();
+  }, 10000);
   startRound();
 })();
+
