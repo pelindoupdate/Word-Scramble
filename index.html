@@ -3,125 +3,93 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Challenge Corner | Pelindo Scramble</title>
+  <title>Pelindo Scramble | Challenge Corner</title>
   <link rel="stylesheet" href="style.css"/>
 </head>
 <body>
-<audio id="bgm" src="assets/bgm.mp3" loop></audio>
+
 <header class="hero">
-  <div class="hero-text">
-    <h1>CHALLENGE CORNER</h1>
-    <h2>Sejenak, Asah Otak!</h2>
-    <p>Selesaikan tantangan, raih poin & merchandise!</p>
+  <div class="hero-left">
+    <div>
+      <h1>CHALLENGE CORNER</h1>
+      <h2>Pelindo Scramble</h2>
+      <p>Susun huruf, kejar skor, masuk Top 10 🏁</p>
+    </div>
   </div>
-  <div class="hero-badge">
-    <img src="assets/pelindo-logo.png" class="logo-pelindo" />
-    <div class="pill">🎯 Production</div>
-    <div class="pill">🔀 Game X: Pelindo Scramble</div>
+
+  <!-- (4) Logo Pelindo pojok kanan atas -->
+  <div class="hero-right">
+    <img class="logo" src="assets/pelindo-logo.png" alt="Pelindo Logo">
   </div>
 </header>
 
 <main class="container">
 
-  <!-- GAME -->
   <section class="panel card">
     <div class="panel-head">
-      <h3>🔀 Pelindo Scramble</h3>
+      <h3>🔀 Game</h3>
       <div class="stats">
-        <div class="stat">
-          <span class="label">Skor</span>
-          <span id="score" class="value">0</span>
-        </div>
-        <div class="stat">
-          <span class="label">Streak</span>
-          <span id="streak" class="value">0</span>
-        </div>
-        <div class="stat">
-          <span class="label">Waktu</span>
-          <span id="time" class="value">60</span>
-        </div>
+        <div class="stat"><span class="label">Skor</span><span id="score" class="value">0</span></div>
+        <div class="stat"><span class="label">Streak</span><span id="streak" class="value">0</span></div>
+        <div class="stat"><span class="label">Waktu</span><span id="time" class="value">60</span></div>
       </div>
     </div>
 
     <div class="game-box">
-      <p class="sub">Susun huruf menjadi kata terkait Pelindo. Skor kamu bisa masuk Top 10 🏁</p>
-
-      <div class="scramble-wrap">
+      <div class="topline">
         <div class="chip" id="categoryChip">Kategori: -</div>
-        <div class="scramble" id="scrambleText">—</div>
+        <button class="ghost" id="soundBtn" type="button">🔊 Sound: OFF</button>
       </div>
 
+      <div class="scramble" id="scrambleText">—</div>
+
       <div class="input-row">
-        <input id="answerInput" type="text" placeholder="Ketik jawaban di sini..." autocomplete="off" />
+        <input id="answerInput" type="text" placeholder="Ketik jawaban..." autocomplete="off"/>
         <button id="submitBtn">Kirim</button>
-        <audio id="sfxCorrect" src="assets/correct.mp3"></audio>
-        <audio id="sfxWrong" src="assets/wrong.mp3"></audio>
       </div>
 
       <div class="actions">
-        <button class="ghost" id="hintBtn">💡 Hint (-5)</button>
-        <button class="ghost" id="skipBtn">⏭️ Skip (-3)</button>
-        <button class="danger" id="resetBtn">🔄 Ulang</button>
+        <button class="ghost" id="hintBtn" type="button">💡 Hint (-5)</button>
+        <button class="ghost" id="skipBtn" type="button">⏭️ Skip (-3)</button>
+        <button class="danger" id="resetBtn" type="button">🔄 Ulang</button>
       </div>
 
       <div id="message" class="message"></div>
     </div>
-
-    <div class="howto">
-      <h4>Aturan Main</h4>
-      <ul>
-        <li>1 ronde = 60 detik</li>
-        <li>Benar: +10 poin + bonus streak (maks +5)</li>
-        <li>Hint: -5 poin, Skip: -3 poin</li>
-        <li>Setelah ronde, simpan nama & unit untuk masuk leaderboard online</li>
-      </ul>
-    </div>
   </section>
 
-  <!-- LEADERBOARD -->
   <section class="panel card">
     <div class="panel-head">
-      <h3>🏅 Leaderboard Online (Top 10)</h3>
-      <div class="mini-note">
-        Status API: <span id="apiStatus" class="badge">checking…</span>
-      </div>
+      <h3>🏅 Leaderboard Top 10</h3>
+      <div class="mini-note">Status API: <span id="apiStatus" class="badge">checking…</span></div>
     </div>
 
+    <!-- (3) Setelah simpan score, form ini akan otomatis hilang -->
     <form id="saveForm" class="save-form">
-      <input id="playerName" type="text" maxlength="24" placeholder="Nama (contoh: Maria)" />
+      <input id="playerName" type="text" maxlength="24" placeholder="Nama (wajib)" />
       <input id="playerUnit" type="text" maxlength="40" placeholder="Unit/Entitas (opsional)" />
       <button id="saveBtn" type="submit">Simpan Skor</button>
     </form>
 
     <div class="table">
       <div class="row head">
-        <div>#</div>
-        <div>Nama</div>
-        <div>Unit</div>
-        <div class="right">Skor</div>
-        <div class="right">Waktu</div>
+        <div>#</div><div>Nama</div><div>Unit</div><div class="right">Skor</div><div class="right">Waktu</div>
       </div>
       <div id="leaderboard" class="rows"></div>
     </div>
 
-    <div class="hint-box">
-      <small class="muted">
-        Jika API sedang down, skor tetap tersimpan lokal (browser) dan akan dicoba sync lagi saat kamu refresh.
-      </small>
+    <div id="afterSaveNote" class="hint-box hidden">
+      <small class="muted">Terima kasih! Skor sudah tercatat. Kamu bisa pantau leaderboard di sini ✅</small>
     </div>
   </section>
 
 </main>
 
-<footer class="footer">
-  <span>© Challenge Corner</span>
-  <span class="muted">noreply email blast</span>
-</footer>
+<!-- (5)(6) Audio -->
+<audio id="bgm" src="assets/audio/bgm.mp3" loop preload="auto"></audio>
+<audio id="sfxCorrect" src="assets/audio/correct.mp3" preload="auto"></audio>
+<audio id="sfxWrong" src="assets/audio/wrong.mp3" preload="auto"></audio>
 
 <script src="script.js"></script>
 </body>
 </html>
-
-
-
-
