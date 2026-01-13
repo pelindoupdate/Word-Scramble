@@ -7,6 +7,9 @@ const API_URL = "https://script.google.com/macros/s/AKfycbxjCtnTfARAXrpVxl89X9iG
 
 // Game ID (for leaderboard separation)
 const GAME = "SCRAMBLE";
+const bgm = document.getElementById("bgm");
+bgm.volume = 0.3;
+bgm.play().catch(()=>{});
 
 // Word bank
 // const WORD_BANK = [
@@ -422,6 +425,7 @@ saveForm.addEventListener("submit", handleSave);
   }, 10000);
   startRound();
 })();
+
 
 
 
