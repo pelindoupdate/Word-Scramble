@@ -7,7 +7,7 @@
   <link rel="stylesheet" href="style.css"/>
 </head>
 <body>
-
+<audio id="bgm" src="assets/bgm.mp3" loop></audio>
 <header class="hero">
   <div class="hero-text">
     <h1>CHALLENGE CORNER</h1>
@@ -15,6 +15,7 @@
     <p>Selesaikan tantangan, raih poin & merchandise!</p>
   </div>
   <div class="hero-badge">
+    <img src="pelindo-logo.png" class="logo-pelindo" />
     <div class="pill">🎯 Production</div>
     <div class="pill">🔀 Game X: Pelindo Scramble</div>
   </div>
@@ -53,6 +54,8 @@
       <div class="input-row">
         <input id="answerInput" type="text" placeholder="Ketik jawaban di sini..." autocomplete="off" />
         <button id="submitBtn">Kirim</button>
+        <audio id="sfxCorrect" src="assets/correct.mp3"></audio>
+        <audio id="sfxWrong" src="assets/wrong.mp3"></audio>
       </div>
 
       <div class="actions">
@@ -84,7 +87,7 @@
       </div>
     </div>
 
-    <form id="saveForm" class="save-form">
+    <form id="saveSection" class="save-form">
       <input id="playerName" type="text" maxlength="24" placeholder="Nama (contoh: Nurul)" />
       <input id="playerUnit" type="text" maxlength="40" placeholder="Unit/Entitas (opsional)" />
       <button id="saveBtn" type="submit">Simpan Skor</button>
@@ -118,3 +121,4 @@
 <script src="script.js"></script>
 </body>
 </html>
+
