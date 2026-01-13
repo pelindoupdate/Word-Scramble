@@ -9,19 +9,31 @@ const API_URL = "https://script.google.com/macros/s/AKfycbxjCtnTfARAXrpVxl89X9iG
 const GAME = "SCRAMBLE";
 
 // Word bank
-const WORD_BANK = [
-  { answer: "PELINDO", category: "Brand" },
-  { answer: "AKHLAK", category: "Values" },
-  { answer: "PELABUHAN", category: "Maritim" },
-  { answer: "LOGISTIK", category: "Operasional" },
-  { answer: "TERMINAL", category: "Maritim" },
-  { answer: "KONEKTIVITAS", category: "Strategi" },
-  { answer: "LAYANAN", category: "Service" },
-  { answer: "KESELAMATAN", category: "HSSE" },
-  { answer: "INTEGRASI", category: "Transformasi" },
-  { answer: "KOLABORASI", category: "Culture" },
-  { answer: "RESILIENSI", category: "Port Resilience" },
-];
+// const WORD_BANK = [
+//   { answer: "PELINDO", category: "Brand" },
+//   { answer: "AKHLAK", category: "Values" },
+//   { answer: "PELABUHAN", category: "Maritim" },
+//   { answer: "LOGISTIK", category: "Operasional" },
+//   { answer: "TERMINAL", category: "Maritim" },
+//   { answer: "KONEKTIVITAS", category: "Strategi" },
+//   { answer: "LAYANAN", category: "Service" },
+//   { answer: "KESELAMATAN", category: "HSSE" },
+//   { answer: "INTEGRASI", category: "Transformasi" },
+//   { answer: "KOLABORASI", category: "Culture" },
+//   { answer: "RESILIENSI", category: "Port Resilience" },
+// ];
+
+let WORD_BANK = [];
+
+async function loadQuestions() {
+  const res = await fetch(`${API_URL}?action=questions`);
+  const data = await res.json();
+  WORD_BANK = data.rows.map(r => ({
+    answer: r.term,
+    category: r.category
+  }));
+}
+
 
 // Config
 const ROUND_SECONDS = 60;
@@ -401,11 +413,13 @@ saveForm.addEventListener("submit", handleSave);
   renderLeaderboard(loadFallbackTop());
   await syncPending();
   await refreshTop();
+  await loadQuestions();
   setInterval(async () => {
     await syncPending();
     await refreshTop();
   }, 10000);
   startRound();
 })();
+
 
 
