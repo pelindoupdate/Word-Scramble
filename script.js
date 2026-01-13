@@ -14,30 +14,30 @@ const sfxCorrect = document.getElementById("sfxCorrect");
 const sfxWrong = document.getElementById("sfxWrong");
 
 // Word bank
-// const WORD_BANK = [
-//   { answer: "PELINDO", category: "Brand" },
-//   { answer: "AKHLAK", category: "Values" },
-//   { answer: "PELABUHAN", category: "Maritim" },
-//   { answer: "LOGISTIK", category: "Operasional" },
-//   { answer: "TERMINAL", category: "Maritim" },
-//   { answer: "KONEKTIVITAS", category: "Strategi" },
-//   { answer: "LAYANAN", category: "Service" },
-//   { answer: "KESELAMATAN", category: "HSSE" },
-//   { answer: "INTEGRASI", category: "Transformasi" },
-//   { answer: "KOLABORASI", category: "Culture" },
-//   { answer: "RESILIENSI", category: "Port Resilience" },
-// ];
+const WORD_BANK = [
+  { answer: "PELINDO", category: "Brand" },
+  { answer: "AKHLAK", category: "Values" },
+  { answer: "PELABUHAN", category: "Maritim" },
+  { answer: "LOGISTIK", category: "Operasional" },
+  { answer: "TERMINAL", category: "Maritim" },
+  { answer: "KONEKTIVITAS", category: "Strategi" },
+  { answer: "LAYANAN", category: "Service" },
+  { answer: "KESELAMATAN", category: "HSSE" },
+  { answer: "INTEGRASI", category: "Transformasi" },
+  { answer: "KOLABORASI", category: "Culture" },
+  { answer: "RESILIENSI", category: "Port Resilience" },
+];
 
-let WORD_BANK = [];
+// let WORD_BANK = [];
 
-async function loadQuestions() {
-  const res = await fetch(`${API_URL}?action=questions`);
-  const data = await res.json();
-  WORD_BANK = data.rows.map(r => ({
-    answer: r.term,
-    category: r.category
-  }));
-}
+// async function loadQuestions() {
+//   const res = await fetch(`${API_URL}?action=questions`);
+//   const data = await res.json();
+//   WORD_BANK = data.rows.map(r => ({
+//     answer: r.term,
+//     category: r.category
+//   }));
+// }
 
 
 // Config
@@ -431,6 +431,7 @@ saveForm.addEventListener("submit", handleSave);
   }, 10000);
   startRound();
 })();
+
 
 
 
