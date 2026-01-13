@@ -3,7 +3,7 @@
 // ============================
 
 // 1) SET THIS:
-const API_URL = "https://script.google.com/macros/s/AKfycbzWW07z5RAOy5JD96LX049kvn8izKnXbSOZ9OGK87KE1Gekre8ga8Fa7px0fTyBqdnJ/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbxjCtnTfARAXrpVxl89X9iGNiTLrThMF24-dru2EBOPb4oq5cOvg2W-C7_qGHLJA2YJ/exec";
 
 // Game ID (for leaderboard separation)
 const GAME = "SCRAMBLE";
@@ -407,4 +407,5 @@ saveForm.addEventListener("submit", handleSave);
   }, 10000);
   startRound();
 })();
+
 
