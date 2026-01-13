@@ -14,6 +14,13 @@ body { margin: 0; color: #0f2137; background: radial-gradient(circle at 20% 0%, 
 .hero h2 { margin: 6px 0 6px; font-weight: 700; }
 .hero p { margin: 0; opacity: .95; }
 .hero-badge { display: flex; gap: 10px; flex-wrap: wrap; justify-content: flex-end; }
+.hero-left { display:flex; align-items:flex-end; gap:16px; }
+.hero-right { display:flex; align-items:flex-end; justify-content:flex-end; }
+.logo { height: 46px; width:auto; object-fit: contain; filter: drop-shadow(0 8px 18px rgba(0,0,0,.18)); }
+
+.topline { display:flex; justify-content:space-between; align-items:center; gap:10px; margin-bottom:10px; }
+.hidden { display: none !important; }
+
 .pill {
   background: rgba(255,255,255,.18);
   border: 1px solid rgba(255,255,255,.28);
@@ -145,4 +152,5 @@ button:active { transform: translateY(1px); }
   background: rgba(255,255,255,.55);
   border-top: 1px solid rgba(15,33,55,.08);
 }
+
 
