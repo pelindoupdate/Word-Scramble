@@ -344,12 +344,19 @@ async function initGame(){
 // ============================
 const isAdminPage = !!$("termsTable");
 
+// function getAdminKey(){
+//   return sessionStorage.getItem("cc_admin_key") || "";
+// }
+// function setAdminKey(k){
+//   sessionStorage.setItem("cc_admin_key", k);
+// }
 function getAdminKey(){
-  return sessionStorage.getItem("cc_admin_key") || "";
+  return (sessionStorage.getItem("cc_admin_key") || "").trim();
 }
 function setAdminKey(k){
-  sessionStorage.setItem("cc_admin_key", k);
+  sessionStorage.setItem("cc_admin_key", String(k || "").trim());
 }
+
 function adminMsg(text, type=""){
   const el = $("adminMsg");
   if(!el) return;
@@ -431,6 +438,7 @@ async function adminAdd(e){
   if(term.includes(" ")) return adminMsg("Term harus 1 kata (tanpa spasi).", "bad");
 
   try{
+    // await apiPost({ action:"terms_add", adminKey, term, category, level, active });
     await apiPost({ action:"terms_add", adminKey, term, category, level, active });
     adminMsg("Berhasil tambah ✅", "ok");
     $("term").value = "";
@@ -445,10 +453,17 @@ function initAdmin(){
   // preload key
   $("adminKey").value = getAdminKey();
 
+  // $("saveKeyBtn").addEventListener("click", ()=>{
+  //   setAdminKey(($("adminKey").value||"").trim());
+  //   adminMsg("Admin key tersimpan di session ✅", "ok");
+  // });
+
   $("saveKeyBtn").addEventListener("click", ()=>{
-    setAdminKey(($("adminKey").value||"").trim());
-    adminMsg("Admin key tersimpan di session ✅", "ok");
+    const k = ($("adminKey").value || "").trim();
+    setAdminKey(k);
+    adminMsg(k ? "Admin key tersimpan ✅" : "Admin key masih kosong.", k ? "ok" : "bad");
   });
+
 
   $("addForm").addEventListener("submit", adminAdd);
   $("refreshBtn").addEventListener("click", adminList);
@@ -464,4 +479,5 @@ function initAdmin(){
   if(isGamePage) await initGame();
   if(isAdminPage) initAdmin();
 })();
+
 
