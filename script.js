@@ -357,13 +357,22 @@ function setAdminKey(k){
   sessionStorage.setItem("cc_admin_key", String(k || "").trim());
 }
 
-function adminMsg(text, type=""){
-  const el = $("adminMsg");
+// function adminMsg(text, type=""){
+//   const el = $("adminMsg");
+//   if(!el) return;
+//   el.textContent = text || "";
+//   el.className = "message";
+//   if(type) el.classList.add(type);
+// }
+function adminMsgAdd(text, type=""){
+  const el = $("adminMsgAdd");
   if(!el) return;
   el.textContent = text || "";
-  el.className = "message";
+  el.className = "message mini";
   if(type) el.classList.add(type);
 }
+
+
 
 async function adminList(){
   const adminKey = getAdminKey();
@@ -427,25 +436,25 @@ function renderTermsTable(rows){
 async function adminAdd(e){
   e.preventDefault();
   const adminKey = getAdminKey();
-  if(!adminKey) return adminMsg("Isi ADMIN KEY dulu.", "bad");
+  if(!adminKey) return adminMsgAdd("Isi ADMIN KEY dulu.", "bad");
 
   const term = ($("term").value || "").trim();
   const category = ($("category").value || "").trim();
   const level = $("level").value;
   const active = $("active").value;
 
-  if(!term) return adminMsg("Term wajib diisi.", "bad");
-  if(term.includes(" ")) return adminMsg("Term harus 1 kata (tanpa spasi).", "bad");
+  if(!term) return adminMsgAdd("Term wajib diisi.", "bad");
+  if(term.includes(" ")) return adminMsgAdd("Term harus 1 kata (tanpa spasi).", "bad");
 
   try{
     // await apiPost({ action:"terms_add", adminKey, term, category, level, active });
     await apiPost({ action:"terms_add", adminKey, term, category, level, active });
-    adminMsg("Berhasil tambah ✅", "ok");
+    adminMsgAdd("Berhasil tambah ✅", "ok");
     $("term").value = "";
     $("category").value = "";
     await adminList();
   } catch(e){
-    adminMsg("Gagal tambah: " + (e.message||e), "bad");
+    adminMsgAdd("Gagal tambah: " + (e.message||e), "bad");
   }
 }
 
@@ -461,7 +470,7 @@ function initAdmin(){
   $("saveKeyBtn").addEventListener("click", ()=>{
     const k = ($("adminKey").value || "").trim();
     setAdminKey(k);
-    adminMsg(k ? "Admin key tersimpan ✅" : "Admin key masih kosong.", k ? "ok" : "bad");
+    adminMsgAdd(k ? "Admin key tersimpan ✅" : "Admin key masih kosong.", k ? "ok" : "bad");
   });
 
 
@@ -479,5 +488,6 @@ function initAdmin(){
   if(isGamePage) await initGame();
   if(isAdminPage) initAdmin();
 })();
+
 
 
