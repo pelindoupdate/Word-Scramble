@@ -1,68 +1,43 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Admin | Terms Manager</title>
-  <link rel="stylesheet" href="style.css"/>
-</head>
-<body>
+<main class="admin-shell">
 
-<header class="hero">
-  <div class="hero-left">
-    <div>
-      <h1>ADMIN PANEL</h1>
-      <h2>Input Istilah Scramble</h2>
-      <p>Tambah, aktif/nonaktif, dan kelola database istilah.</p>
-    </div>
-  </div>
-  <div class="hero-right">
-    <img class="logo" src="assets/pelindo-logo.png" alt="Pelindo Logo">
-  </div>
-</header>
-
-<main class="container">
-
-  <section class="panel card">
-    <h3>🔐 Admin Key</h3>
-    <div class="input-row">
-      <input id="adminKey" type="text" placeholder="Masukkan ADMIN KEY..." />
-      <button id="saveKeyBtn" type="button">Simpan Key</button>
-    </div>
-    <div class="hint-box"><small class="muted">Key disimpan di browser (session) agar tidak perlu isi ulang.</small></div>
-  </section>
-
-  <section class="panel card">
-    <h3>➕ Tambah Istilah</h3>
-    <!-- <form id="addForm" class="save-form" style="grid-template-columns: 1.2fr 1fr .8fr .6fr auto;">
-      <input id="term" type="text" maxlength="40" placeholder="Istilah (1 kata) contoh: Resilience" required />
-      <input id="category" type="text" maxlength="30" placeholder="Category contoh: Sustainability" />
-      <select id="level">
-        <option value="easy">easy</option>
-        <option value="medium">medium</option>
-        <option value="hard">hard</option>
-      </select>
-      <select id="active">
-        <option value="true">active</option>
-        <option value="false">inactive</option>
-      </select>
-      <button type="submit">Tambah</button>
-    </form> -->
-    <form id="addForm" class="admin-form">
-      <div class="form-row">
-        <label>Istilah (1 kata)</label>
-        <input id="term" type="text" maxlength="40"
-          placeholder="Contoh: Resilience" required />
+  <section class="admin-top">
+    <!-- KIRI: Admin Key -->
+    <div class="card panel">
+      <div class="card-title">
+        <span class="icon">🔐</span>
+        <h3>Admin Key</h3>
       </div>
-    
-      <div class="form-row">
-        <label>Kategori</label>
-        <input id="category" type="text" maxlength="30"
-          placeholder="Contoh: Sustainability" />
+
+      <div class="input-row">
+        <input id="adminKey" type="text" placeholder="Masukkan ADMIN KEY..." />
+        <button id="saveKeyBtn" type="button">Simpan Key</button>
       </div>
-    
-      <div class="form-row grid-3">
-        <div>
+
+      <div class="hint-box">
+        <small class="muted">Key disimpan di browser (session) agar tidak perlu isi ulang.</small>
+      </div>
+      <div id="adminMsg" class="message"></div>
+    </div>
+
+    <!-- KANAN: Tambah Istilah -->
+    <div class="card panel">
+      <div class="card-title">
+        <span class="icon">➕</span>
+        <h3>Tambah Istilah</h3>
+      </div>
+
+      <form id="addForm" class="admin-form">
+        <div class="field">
+          <label>Istilah</label>
+          <input id="term" type="text" maxlength="40" placeholder="contoh: PELABUHAN" required />
+        </div>
+
+        <div class="field">
+          <label>Kategori</label>
+          <input id="category" type="text" maxlength="30" placeholder="contoh: Brand" />
+        </div>
+
+        <div class="field">
           <label>Level</label>
           <select id="level">
             <option value="easy">easy</option>
@@ -70,43 +45,40 @@
             <option value="hard">hard</option>
           </select>
         </div>
-    
-        <div>
+
+        <div class="field">
           <label>Status</label>
           <select id="active">
-            <option value="true">active</option>
-            <option value="false">inactive</option>
+            <option value="true">Active</option>
+            <option value="false">Inactive</option>
           </select>
         </div>
-    
-        <div class="align-end">
+
+        <div class="admin-form-actions">
+          <div id="adminMsgAdd" class="message mini"></div>
           <button type="submit">➕ Tambah Istilah</button>
         </div>
-      </div>
-    </form>
-
-    <div id="adminMsg" class="message"></div>
+      </form>
+    </div>
   </section>
 
-  <section class="panel card">
+  <!-- BAWAH: Daftar Istilah -->
+  <section class="card panel admin-bottom">
     <div class="panel-head">
       <h3>📚 Daftar Istilah</h3>
       <button class="ghost" id="refreshBtn" type="button">↻ Refresh</button>
     </div>
 
-    <div class="table">
-      <div class="row head" style="grid-template-columns: 60px 1.4fr 1fr .7fr .7fr 80px 80px;">
-        <div>ID</div><div>Term</div><div>Category</div><div>Level</div><div>Active</div><div class="right">Toggle</div><div class="right">Delete</div>
+    <div class="table admin-table">
+      <div class="row head admin-row-head">
+        <div>#</div>
+        <div>Nama Istilah</div>
+        <div>Kategori</div>
+        <div>Status</div>
+        <div class="right">Aksi</div>
       </div>
       <div id="termsTable" class="rows"></div>
     </div>
   </section>
 
 </main>
-
-<script>
-  // minimal helper; main admin logic ada di script.js (shared)
-</script>
-<script src="script.js"></script>
-</body>
-</html>
