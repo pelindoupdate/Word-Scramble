@@ -123,7 +123,7 @@ function setGameEnabled(enabled){
 
 function startRound(){
   clearInterval(timerId);
-  timeLeft = 60;
+  timeLeft = 120;
   score = 0;
   streak = 0;
   updateStats();
@@ -641,6 +641,7 @@ function initAdmin(){
 // if(isAdminPage){
 //   initAdminPage();
 // }
+
 
 
 
