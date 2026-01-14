@@ -375,3 +375,96 @@ button:active{ transform: translateY(1px); }
   background: rgba(255,255,255,.55);
   border-top: 1px solid rgba(15,33,55,.08);
 }
+
+/* ============================
+   Admin Layout (matches reference)
+   ============================ */
+.admin-shell{
+  padding: 24px;
+  display: grid;
+  gap: 18px;
+}
+
+.admin-top{
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 18px;
+}
+
+.admin-bottom{ padding-top: 18px; }
+
+.card-title{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+.card-title .icon{
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border-radius: 10px;
+  background: rgba(11,45,91,.08);
+  border: 1px solid rgba(11,45,91,.14);
+}
+.card-title h3{
+  margin: 0;
+  color: var(--blue-900);
+  font-weight: 900;
+}
+
+.admin-form{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px 14px;
+}
+
+.admin-form .field{
+  display: grid;
+  gap: 6px;
+}
+.admin-form label{
+  font-size: 12px;
+  font-weight: 800;
+  color: rgba(15,33,55,.75);
+}
+
+.admin-form select{
+  padding: 13px 14px;
+  border-radius: 14px;
+  border: 1px solid rgba(15,33,55,.18);
+  background: #fff;
+  outline: none;
+}
+
+.admin-form-actions{
+  grid-column: 1 / -1;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 4px;
+}
+
+.message.mini{
+  margin: 0;
+  min-height: unset;
+  padding: 10px 12px;
+  flex: 1;
+}
+
+.admin-table .row{
+  grid-template-columns: 60px 1.5fr 1fr 1fr 130px;
+}
+
+.admin-row-head{
+  background: rgba(11,45,91,.10);
+}
+
+@media (max-width: 900px){
+  .admin-top{ grid-template-columns: 1fr; }
+  .admin-form{ grid-template-columns: 1fr; }
+}
+
+
