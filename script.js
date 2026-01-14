@@ -104,11 +104,11 @@ function nextPuzzle(){
   current = pickTerm();
   if (!current) {
     $("scrambleText").textContent = "—";
-    $("categoryChip").textContent = "Kategori: -";
+    $("categoryChip").textContent = "Keterangan: -";
     setMessage("Belum ada soal. Tambahkan istilah di Admin dulu 🧩", "bad");
     return;
   }
-  $("categoryChip").textContent = `Kategori: ${current.category || "-"}`;
+  $("categoryChip").textContent = `Keterangan: ${current.category || "-"}`;
   $("scrambleText").textContent = scrambleWord(current.term).split("").join(" ");
   $("answerInput").value = "";
   $("answerInput").focus();
@@ -641,6 +641,7 @@ function initAdmin(){
 // if(isAdminPage){
 //   initAdminPage();
 // }
+
 
 
 
