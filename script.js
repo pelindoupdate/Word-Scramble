@@ -51,7 +51,7 @@ let TERMS = []; // loaded from DB
 let current = null;
 let score = 0;
 let streak = 0;
-let timeLeft = 60;
+let timeLeft = 120;
 let timerId = null;
 let usedHint = false;
 let soundOn = false;
@@ -641,6 +641,7 @@ function initAdmin(){
 // if(isAdminPage){
 //   initAdminPage();
 // }
+
 
 
 
