@@ -339,17 +339,161 @@ async function initGame(){
   if (soundBtn) soundBtn.addEventListener("click", toggleSound);
 }
 
-// ============================
-// ADMIN PAGE (admin.html)
-// ============================
-const isAdminPage = !!$("termsTable");
+// // ============================
+// // ADMIN PAGE (admin.html)
+// // ============================
+// const isAdminPage = !!$("termsTable");
 
+// // function getAdminKey(){
+// //   return sessionStorage.getItem("cc_admin_key") || "";
+// // }
+// // function setAdminKey(k){
+// //   sessionStorage.setItem("cc_admin_key", k);
+// // }
 // function getAdminKey(){
-//   return sessionStorage.getItem("cc_admin_key") || "";
+//   return (sessionStorage.getItem("cc_admin_key") || "").trim();
 // }
 // function setAdminKey(k){
-//   sessionStorage.setItem("cc_admin_key", k);
+//   sessionStorage.setItem("cc_admin_key", String(k || "").trim());
 // }
+
+// // function adminMsg(text, type=""){
+// //   const el = $("adminMsg");
+// //   if(!el) return;
+// //   el.textContent = text || "";
+// //   el.className = "message";
+// //   if(type) el.classList.add(type);
+// // }
+// function adminMsgAdd(text, type=""){
+//   const el = $("adminMsgAdd");
+//   if(!el) return;
+//   el.textContent = text || "";
+//   el.className = "message mini";
+//   if(type) el.classList.add(type);
+// }
+
+
+
+// async function adminList(){
+//   const adminKey = getAdminKey();
+//   if(!adminKey) return adminMsg("Isi ADMIN KEY dulu.", "bad");
+//   try{
+//     const data = await apiPost({ action:"terms_list", adminKey });
+//     renderTermsTable(data.rows || []);
+//     adminMsg("Loaded ✅", "ok");
+//   } catch (e){
+//     adminMsg("Gagal load: " + String(e.message || e), "bad");
+//   }
+// }
+
+// function renderTermsTable(rows){
+//   const el = $("termsTable");
+//   if(!rows.length){
+//     el.innerHTML = `<div class="row"><div>-</div><div class="muted">Belum ada istilah</div></div>`;
+//     return;
+//   }
+
+//   el.innerHTML = rows.map(r => `
+//     <div class="row" style="grid-template-columns: 60px 1.4fr 1fr .7fr .7fr 80px 80px;">
+//       <div>${r.id}</div>
+//       <div>${escapeHtml(r.term)}</div>
+//       <div>${escapeHtml(r.category||"")}</div>
+//       <div>${escapeHtml(r.level||"")}</div>
+//       <div>${r.active ? "TRUE" : "FALSE"}</div>
+//       <div class="right"><button class="ghost" data-toggle="${r.id}" data-active="${!r.active}">Toggle</button></div>
+//       <div class="right"><button class="danger" data-del="${r.id}">Delete</button></div>
+//     </div>
+//   `).join("");
+
+//   el.querySelectorAll("button[data-toggle]").forEach(btn=>{
+//     btn.addEventListener("click", async ()=>{
+//       const adminKey = getAdminKey();
+//       const id = btn.getAttribute("data-toggle");
+//       const active = btn.getAttribute("data-active") === "true";
+//       try{
+//         await apiPost({ action:"terms_toggle", adminKey, id, active });
+//         await adminList();
+//       } catch(e){
+//         adminMsg("Toggle gagal: " + (e.message||e), "bad");
+//       }
+//     });
+//   });
+
+//   el.querySelectorAll("button[data-del]").forEach(btn=>{
+//     btn.addEventListener("click", async ()=>{
+//       const adminKey = getAdminKey();
+//       const id = btn.getAttribute("data-del");
+//       try{
+//         await apiPost({ action:"terms_delete", adminKey, id });
+//         await adminList();
+//       } catch(e){
+//         adminMsg("Delete gagal: " + (e.message||e), "bad");
+//       }
+//     });
+//   });
+// }
+
+// async function adminAdd(e){
+//   e.preventDefault();
+//   const adminKey = getAdminKey();
+//   if(!adminKey) return adminMsgAdd("Isi ADMIN KEY dulu.", "bad");
+
+//   const term = ($("term").value || "").trim();
+//   const category = ($("category").value || "").trim();
+//   const level = $("level").value;
+//   const active = $("active").value;
+
+//   if(!term) return adminMsgAdd("Term wajib diisi.", "bad");
+//   if(term.includes(" ")) return adminMsgAdd("Term harus 1 kata (tanpa spasi).", "bad");
+
+//   try{
+//     // await apiPost({ action:"terms_add", adminKey, term, category, level, active });
+//     await apiPost({ action:"terms_add", adminKey, term, category, level, active });
+//     adminMsgAdd("Berhasil tambah ✅", "ok");
+//     $("term").value = "";
+//     $("category").value = "";
+//     await adminList();
+//   } catch(e){
+//     adminMsgAdd("Gagal tambah: " + (e.message||e), "bad");
+//   }
+// }
+
+// function initAdmin(){
+//   // preload key
+//   $("adminKey").value = getAdminKey();
+
+//   // $("saveKeyBtn").addEventListener("click", ()=>{
+//   //   setAdminKey(($("adminKey").value||"").trim());
+//   //   adminMsg("Admin key tersimpan di session ✅", "ok");
+//   // });
+
+//   $("saveKeyBtn").addEventListener("click", ()=>{
+//     const k = ($("adminKey").value || "").trim();
+//     setAdminKey(k);
+//     adminMsgAdd(k ? "Admin key tersimpan ✅" : "Admin key masih kosong.", k ? "ok" : "bad");
+//   });
+
+
+//   $("addForm").addEventListener("submit", adminAdd);
+//   $("refreshBtn").addEventListener("click", adminList);
+
+//   // auto load if key exists
+//   if(getAdminKey()) adminList();
+// }
+
+// // ============================
+// // BOOT
+// // ============================
+// (async function(){
+//   if(isGamePage) await initGame();
+//   if(isAdminPage) initAdmin();
+// })();
+
+// ============================
+// ADMIN PAGE: Load & Render Terms
+// ============================
+const isAdminPage = !!document.getElementById("termsTable");
+
 function getAdminKey(){
   return (sessionStorage.getItem("cc_admin_key") || "").trim();
 }
@@ -357,137 +501,147 @@ function setAdminKey(k){
   sessionStorage.setItem("cc_admin_key", String(k || "").trim());
 }
 
-// function adminMsg(text, type=""){
-//   const el = $("adminMsg");
-//   if(!el) return;
-//   el.textContent = text || "";
-//   el.className = "message";
-//   if(type) el.classList.add(type);
-// }
-function adminMsgAdd(text, type=""){
-  const el = $("adminMsgAdd");
+function adminMsg(text, type=""){
+  const el = document.getElementById("adminMsg");
   if(!el) return;
   el.textContent = text || "";
-  el.className = "message mini";
+  el.className = "message";
   if(type) el.classList.add(type);
 }
 
-
-
-async function adminList(){
-  const adminKey = getAdminKey();
-  if(!adminKey) return adminMsg("Isi ADMIN KEY dulu.", "bad");
-  try{
-    const data = await apiPost({ action:"terms_list", adminKey });
-    renderTermsTable(data.rows || []);
-    adminMsg("Loaded ✅", "ok");
-  } catch (e){
-    adminMsg("Gagal load: " + String(e.message || e), "bad");
-  }
+// API helpers (pastikan ini sudah ada di script.js kamu)
+async function apiPost(payload) {
+  const res = await fetch(API_URL, {
+    method: "POST",
+    headers: { "Content-Type": "text/plain;charset=utf-8" }, // anti CORS preflight
+    body: JSON.stringify(payload),
+  });
+  const text = await res.text();
+  let data;
+  try { data = JSON.parse(text); } catch { data = { ok:false, error:"Bad JSON response", raw:text }; }
+  if (!data.ok) throw new Error(data.error || "API error");
+  return data;
 }
 
-function renderTermsTable(rows){
-  const el = $("termsTable");
-  if(!rows.length){
-    el.innerHTML = `<div class="row"><div>-</div><div class="muted">Belum ada istilah</div></div>`;
+function escapeHtml(s){
+  return String(s)
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+}
+
+// (A) LOAD terms dari DB (sheet terms) via endpoint admin: terms_list
+async function adminListTerms(){
+  const adminKey = getAdminKey();
+  if(!adminKey){
+    adminMsg("Isi ADMIN KEY dulu lalu klik Simpan Key.", "bad");
     return;
   }
 
-  el.innerHTML = rows.map(r => `
-    <div class="row" style="grid-template-columns: 60px 1.4fr 1fr .7fr .7fr 80px 80px;">
-      <div>${r.id}</div>
-      <div>${escapeHtml(r.term)}</div>
-      <div>${escapeHtml(r.category||"")}</div>
-      <div>${escapeHtml(r.level||"")}</div>
-      <div>${r.active ? "TRUE" : "FALSE"}</div>
-      <div class="right"><button class="ghost" data-toggle="${r.id}" data-active="${!r.active}">Toggle</button></div>
-      <div class="right"><button class="danger" data-del="${r.id}">Delete</button></div>
-    </div>
-  `).join("");
+  try{
+    adminMsg("Memuat daftar istilah…", "");
+    const data = await apiPost({ action: "terms_list", adminKey });
+    renderTermsTable(data.rows || []);
+    adminMsg(`Berhasil memuat ${ (data.rows || []).length } istilah ✅`, "ok");
+  } catch(e){
+    adminMsg("Gagal memuat istilah: " + (e.message || e), "bad");
+  }
+}
 
-  el.querySelectorAll("button[data-toggle]").forEach(btn=>{
-    btn.addEventListener("click", async ()=>{
+// (B) RENDER ke kolom "Daftar Istilah" (#termsTable)
+function renderTermsTable(rows){
+  const el = document.getElementById("termsTable");
+  if(!el) return;
+
+  if(!rows.length){
+    el.innerHTML = `
+      <div class="row" style="grid-template-columns: 60px 1.5fr 1fr 1fr 130px;">
+        <div>-</div>
+        <div class="muted">Belum ada istilah di database</div>
+        <div class="muted">-</div>
+        <div class="muted">-</div>
+        <div class="right muted">-</div>
+      </div>
+    `;
+    return;
+  }
+
+  el.innerHTML = rows.map((r, i) => {
+    const activeText = r.active ? "Active" : "Inactive";
+    return `
+      <div class="row" style="grid-template-columns: 60px 1.5fr 1fr 1fr 130px;">
+        <div>${i + 1}</div>
+        <div>${escapeHtml(r.term || "")}</div>
+        <div>${escapeHtml(r.category || "")}</div>
+        <div>${activeText}</div>
+        <div class="right" style="display:flex; gap:8px; justify-content:flex-end;">
+          <button class="ghost" data-toggle="${r.id}" data-active="${!r.active}">Toggle</button>
+          <button class="danger" data-del="${r.id}">Hapus</button>
+        </div>
+      </div>
+    `;
+  }).join("");
+
+  // wiring tombol toggle & hapus
+  el.querySelectorAll("button[data-toggle]").forEach(btn => {
+    btn.addEventListener("click", async () => {
       const adminKey = getAdminKey();
       const id = btn.getAttribute("data-toggle");
       const active = btn.getAttribute("data-active") === "true";
       try{
         await apiPost({ action:"terms_toggle", adminKey, id, active });
-        await adminList();
+        await adminListTerms();
       } catch(e){
-        adminMsg("Toggle gagal: " + (e.message||e), "bad");
+        adminMsg("Toggle gagal: " + (e.message || e), "bad");
       }
     });
   });
 
-  el.querySelectorAll("button[data-del]").forEach(btn=>{
-    btn.addEventListener("click", async ()=>{
+  el.querySelectorAll("button[data-del]").forEach(btn => {
+    btn.addEventListener("click", async () => {
       const adminKey = getAdminKey();
       const id = btn.getAttribute("data-del");
       try{
         await apiPost({ action:"terms_delete", adminKey, id });
-        await adminList();
+        await adminListTerms();
       } catch(e){
-        adminMsg("Delete gagal: " + (e.message||e), "bad");
+        adminMsg("Hapus gagal: " + (e.message || e), "bad");
       }
     });
   });
 }
 
-async function adminAdd(e){
-  e.preventDefault();
-  const adminKey = getAdminKey();
-  if(!adminKey) return adminMsgAdd("Isi ADMIN KEY dulu.", "bad");
+// (C) INIT admin page
+function initAdminPage(){
+  const keyInput = document.getElementById("adminKey");
+  const saveKeyBtn = document.getElementById("saveKeyBtn");
+  const refreshBtn = document.getElementById("refreshBtn");
 
-  const term = ($("term").value || "").trim();
-  const category = ($("category").value || "").trim();
-  const level = $("level").value;
-  const active = $("active").value;
+  // isi input dengan key yang tersimpan (kalau ada)
+  if(keyInput) keyInput.value = getAdminKey();
 
-  if(!term) return adminMsgAdd("Term wajib diisi.", "bad");
-  if(term.includes(" ")) return adminMsgAdd("Term harus 1 kata (tanpa spasi).", "bad");
-
-  try{
-    // await apiPost({ action:"terms_add", adminKey, term, category, level, active });
-    await apiPost({ action:"terms_add", adminKey, term, category, level, active });
-    adminMsgAdd("Berhasil tambah ✅", "ok");
-    $("term").value = "";
-    $("category").value = "";
-    await adminList();
-  } catch(e){
-    adminMsgAdd("Gagal tambah: " + (e.message||e), "bad");
+  if(saveKeyBtn){
+    saveKeyBtn.addEventListener("click", () => {
+      setAdminKey((keyInput.value || "").trim());
+      adminMsg("Admin key tersimpan ✅", "ok");
+      adminListTerms(); // auto load setelah save key
+    });
   }
+
+  if(refreshBtn){
+    refreshBtn.addEventListener("click", adminListTerms);
+  }
+
+  // auto load jika key sudah ada
+  if(getAdminKey()) adminListTerms();
 }
 
-function initAdmin(){
-  // preload key
-  $("adminKey").value = getAdminKey();
-
-  // $("saveKeyBtn").addEventListener("click", ()=>{
-  //   setAdminKey(($("adminKey").value||"").trim());
-  //   adminMsg("Admin key tersimpan di session ✅", "ok");
-  // });
-
-  $("saveKeyBtn").addEventListener("click", ()=>{
-    const k = ($("adminKey").value || "").trim();
-    setAdminKey(k);
-    adminMsgAdd(k ? "Admin key tersimpan ✅" : "Admin key masih kosong.", k ? "ok" : "bad");
-  });
-
-
-  $("addForm").addEventListener("submit", adminAdd);
-  $("refreshBtn").addEventListener("click", adminList);
-
-  // auto load if key exists
-  if(getAdminKey()) adminList();
+if(isAdminPage){
+  initAdminPage();
 }
 
-// ============================
-// BOOT
-// ============================
-(async function(){
-  if(isGamePage) await initGame();
-  if(isAdminPage) initAdmin();
-})();
 
 
 
