@@ -1,7 +1,7 @@
 // ============================
 // CONFIG
 // ============================
-const API_URL = "https://script.google.com/macros/s/AKfycbyJzM2LBVkHRaCnRa4AA5QneqVPhCcAElfc33pG2YdVfnNYV7TzwPbijjyS6BB2J0zgEg/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbyye1RPt6vqsSGWsjDXKUO2guASigQiE2D4mBCABbSFMsClmNwARLFiBHTrjQDEJoppOA/exec";
 const GAME = "SCRAMBLE";
 
 // IMPORTANT FIX:
@@ -225,6 +225,7 @@ function renderLeaderboard(rows){
       <div>${i+1}</div>
       <div>${escapeHtml(r.name||"")}</div>
       <div>${escapeHtml(r.unit||"")}</div>
+      <div>${escapeHtml(r.hp||"")}</div>
       <div class="right">${Number(r.score||0)}</div>
       <div class="right">${Number(r.seconds||0)}s</div>
     </div>
@@ -291,6 +292,7 @@ async function handleSaveScore(e){
   e.preventDefault();
   const name = ($("playerName").value || "").trim();
   const unit = ($("playerUnit").value || "").trim();
+  const hp = ($("playerHP").value || "").trim();
   if(!name) { setMessage("Nama wajib diisi ✍️", "bad"); $("playerName").focus(); return; }
 
   const secondsPlayed = 60 - timeLeft;
@@ -641,6 +643,7 @@ function initAdmin(){
 // if(isAdminPage){
 //   initAdminPage();
 // }
+
 
 
 
