@@ -1,7 +1,8 @@
 // ============================
 // CONFIG
 // ============================
-const API_URL = "https://script.google.com/macros/s/AKfycbyye1RPt6vqsSGWsjDXKUO2guASigQiE2D4mBCABbSFMsClmNwARLFiBHTrjQDEJoppOA/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbxVnijJkMTi6bZGxocae3LVbfJ39m8wbK2wkSrsMYNcJ2JzdKOwzB433ESo4bJ5EZOaZQ/exec";
+
 const GAME = "SCRAMBLE";
 
 // IMPORTANT FIX:
@@ -722,6 +723,7 @@ function initAdmin(){
 // if(isAdminPage){
 //   initAdminPage();
 // }
+
 
 
 
