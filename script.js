@@ -288,136 +288,136 @@ function hideSaveForm(){
   if (note) note.classList.remove("hidden");
 }
 
-// async function handleSaveScore(e){
-//   e.preventDefault();
-//   const name = ($("playerName").value || "").trim();
-//   const unit = ($("playerUnit").value || "").trim();
-//   const hp = ($("playerHP").value || "").trim();
-//   if(!name) { setMessage("Nama wajib diisi ✍️", "bad"); $("playerName").focus(); return; }
-
-//   const secondsPlayed = 60 - timeLeft;
-//   const payload = { name, unit, score, seconds: secondsPlayed, game: GAME, source:"web" };
-
-//   try{
-//     setMessage("Menyimpan skor…", "");
-//     const data = await apiPost({ action:"submit", ...payload });
-//     renderLeaderboard(data.top || []);
-//     setApiStatus("online", true);
-//     setMessage("Skor tersimpan ✅", "ok");
-//     hideSaveForm(); // (3)
-//   } catch (err){
-//     // offline fallback queue
-//     const pending = loadPending();
-//     pending.push(payload);
-//     savePending(pending);
-//     setApiStatus("offline", false);
-//     setMessage("API offline. Skor disimpan lokal dan akan dicoba sync saat refresh ✅", "bad");
-//     hideSaveForm(); // tetap hilangkan form (sesuai permintaan)
-//   }
-
-//   $("playerName").value = "";
-//   $("playerUnit").value = "";
-// }
-
-// // Init game page
-// async function initGame(){
-//   setApiStatus("checking…");
-//   renderLeaderboard(loadFallbackTop());
-
-//   await syncPending();
-//   await refreshTop();
-
-//   await loadTerms();          // (2) ambil soal dari DB
-//   startRound();
-
-//   $("submitBtn").addEventListener("click", submitAnswer);
-//   $("answerInput").addEventListener("keydown", (e)=>{ if(e.key==="Enter") submitAnswer(); });
-//   $("hintBtn").addEventListener("click", hint);
-//   $("skipBtn").addEventListener("click", skip);
-//   $("resetBtn").addEventListener("click", startRound);
-//   $("saveForm").addEventListener("submit", handleSaveScore);
-
-//   const soundBtn = $("soundBtn");
-//   if (soundBtn) soundBtn.addEventListener("click", toggleSound);
-// }
-
-function formatHP(input){
-  if(!input) return "";
-
-  // ambil angka saja
-  let hp = input.replace(/\D/g, "");
-
-  // convert 08xxx → 628xxx
-  if(hp.startsWith("08")){
-    hp = "62" + hp.substring(1);
-  }
-
-  return hp;
-}
-
-function maskHP(hp){
-  if(!hp) return "";
-  if(hp.length < 6) return hp;
-  return hp.substring(0,4) + "****" + hp.substring(hp.length-2);
-}
-
 async function handleSaveScore(e){
   e.preventDefault();
-
   const name = ($("playerName").value || "").trim();
   const unit = ($("playerUnit").value || "").trim();
   const hp = ($("playerHP").value || "").trim();
+  if(!name) { setMessage("Nama wajib diisi ✍️", "bad"); $("playerName").focus(); return; }
 
-  if(!name){
-    setMessage("Nama wajib diisi ✍️", "bad");
-    $("playerName").focus();
-    return;
-  }
-
-  // validasi HP hanya angka (opsional tapi recommended)
-  if(hp && !/^[0-9]+$/.test(hp)){
-    setMessage("No. HP hanya boleh angka ❗", "bad");
-    $("playerHP").focus();
-    return;
-  }
-
-  const secondsPlayed = 120 - timeLeft; // FIX (tadi 60 salah)
-  
-  const payload = {
-    name,
-    unit,
-    hp,              // ✅ TAMBAHKAN INI
-    score,
-    seconds: secondsPlayed,
-    game: GAME,
-    source:"web"
-  };
+  const secondsPlayed = 60 - timeLeft;
+  const payload = { name, unit, score, seconds: secondsPlayed, game: GAME, source:"web" };
 
   try{
     setMessage("Menyimpan skor…", "");
     const data = await apiPost({ action:"submit", ...payload });
-
     renderLeaderboard(data.top || []);
     setApiStatus("online", true);
     setMessage("Skor tersimpan ✅", "ok");
-
-    hideSaveForm();
+    hideSaveForm(); // (3)
   } catch (err){
+    // offline fallback queue
     const pending = loadPending();
-    pending.push(payload);   // hp otomatis ikut tersimpan
+    pending.push(payload);
     savePending(pending);
-
     setApiStatus("offline", false);
     setMessage("API offline. Skor disimpan lokal dan akan dicoba sync saat refresh ✅", "bad");
-
-    hideSaveForm();
+    hideSaveForm(); // tetap hilangkan form (sesuai permintaan)
   }
 
-  // reset form
   $("playerName").value = "";
   $("playerUnit").value = "";
-  $("playerHP").value = "";   // ✅ TAMBAHKAN INI
 }
+
+// Init game page
+async function initGame(){
+  setApiStatus("checking…");
+  renderLeaderboard(loadFallbackTop());
+
+  await syncPending();
+  await refreshTop();
+
+  await loadTerms();          // (2) ambil soal dari DB
+  startRound();
+
+  $("submitBtn").addEventListener("click", submitAnswer);
+  $("answerInput").addEventListener("keydown", (e)=>{ if(e.key==="Enter") submitAnswer(); });
+  $("hintBtn").addEventListener("click", hint);
+  $("skipBtn").addEventListener("click", skip);
+  $("resetBtn").addEventListener("click", startRound);
+  $("saveForm").addEventListener("submit", handleSaveScore);
+
+  const soundBtn = $("soundBtn");
+  if (soundBtn) soundBtn.addEventListener("click", toggleSound);
+}
+
+// function formatHP(input){
+//   if(!input) return "";
+
+//   // ambil angka saja
+//   let hp = input.replace(/\D/g, "");
+
+//   // convert 08xxx → 628xxx
+//   if(hp.startsWith("08")){
+//     hp = "62" + hp.substring(1);
+//   }
+
+//   return hp;
+// }
+
+// function maskHP(hp){
+//   if(!hp) return "";
+//   if(hp.length < 6) return hp;
+//   return hp.substring(0,4) + "****" + hp.substring(hp.length-2);
+// }
+
+// async function handleSaveScore(e){
+//   e.preventDefault();
+
+//   const name = ($("playerName").value || "").trim();
+//   const unit = ($("playerUnit").value || "").trim();
+//   const hp = ($("playerHP").value || "").trim();
+
+//   if(!name){
+//     setMessage("Nama wajib diisi ✍️", "bad");
+//     $("playerName").focus();
+//     return;
+//   }
+
+//   // validasi HP hanya angka (opsional tapi recommended)
+//   if(hp && !/^[0-9]+$/.test(hp)){
+//     setMessage("No. HP hanya boleh angka ❗", "bad");
+//     $("playerHP").focus();
+//     return;
+//   }
+
+//   const secondsPlayed = 120 - timeLeft; // FIX (tadi 60 salah)
+  
+//   const payload = {
+//     name,
+//     unit,
+//     hp,              // ✅ TAMBAHKAN INI
+//     score,
+//     seconds: secondsPlayed,
+//     game: GAME,
+//     source:"web"
+//   };
+
+//   try{
+//     setMessage("Menyimpan skor…", "");
+//     const data = await apiPost({ action:"submit", ...payload });
+
+//     renderLeaderboard(data.top || []);
+//     setApiStatus("online", true);
+//     setMessage("Skor tersimpan ✅", "ok");
+
+//     hideSaveForm();
+//   } catch (err){
+//     const pending = loadPending();
+//     pending.push(payload);   // hp otomatis ikut tersimpan
+//     savePending(pending);
+
+//     setApiStatus("offline", false);
+//     setMessage("API offline. Skor disimpan lokal dan akan dicoba sync saat refresh ✅", "bad");
+
+//     hideSaveForm();
+//   }
+
+//   // reset form
+//   $("playerName").value = "";
+//   $("playerUnit").value = "";
+//   $("playerHP").value = "";   // ✅ TAMBAHKAN INI
+// }
 
 
 // ============================
@@ -722,6 +722,7 @@ function initAdmin(){
 // if(isAdminPage){
 //   initAdminPage();
 // }
+
 
 
 
