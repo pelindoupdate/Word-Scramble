@@ -346,37 +346,37 @@ async function handleSaveScore(e){
   $("playerHP").value = "";   // ✅ TAMBAHKAN INI
 }
 
-async function handleSaveScore(e){
-  e.preventDefault();
-  const name = ($("playerName").value || "").trim();
-  const unit = ($("playerUnit").value || "").trim();
-  const hp = ($("playerHP").value || "").trim();
-  if(!name) { setMessage("Nama wajib diisi ✍️", "bad"); $("playerName").focus(); return; }
+// async function handleSaveScore(e){
+//   e.preventDefault();
+//   const name = ($("playerName").value || "").trim();
+//   const unit = ($("playerUnit").value || "").trim();
+//   const hp = ($("playerHP").value || "").trim();
+//   if(!name) { setMessage("Nama wajib diisi ✍️", "bad"); $("playerName").focus(); return; }
 
-  const secondsPlayed = 60 - timeLeft;
-  const payload = { name, unit, score, seconds: secondsPlayed, game: GAME, source:"web" };
+//   const secondsPlayed = 60 - timeLeft;
+//   const payload = { name, unit, score, seconds: secondsPlayed, game: GAME, source:"web" };
 
-  try{
-    setMessage("Menyimpan skor…", "");
-    const data = await apiPost({ action:"submit", ...payload });
-    renderLeaderboard(data.top || []);
-    setApiStatus("online", true);
-    setMessage("Skor tersimpan ✅", "ok");
-    hideSaveForm(); // (3)
-  } catch (err){
-    // offline fallback queue
-    const pending = loadPending();
-    pending.push(payload);
-    savePending(pending);
-    setApiStatus("offline", false);
-    setMessage("API offline. Skor disimpan lokal dan akan dicoba sync saat refresh ✅", "bad");
-    hideSaveForm(); // tetap hilangkan form (sesuai permintaan)
-  }
+//   try{
+//     setMessage("Menyimpan skor…", "");
+//     const data = await apiPost({ action:"submit", ...payload });
+//     renderLeaderboard(data.top || []);
+//     setApiStatus("online", true);
+//     setMessage("Skor tersimpan ✅", "ok");
+//     hideSaveForm(); // (3)
+//   } catch (err){
+//     // offline fallback queue
+//     const pending = loadPending();
+//     pending.push(payload);
+//     savePending(pending);
+//     setApiStatus("offline", false);
+//     setMessage("API offline. Skor disimpan lokal dan akan dicoba sync saat refresh ✅", "bad");
+//     hideSaveForm(); // tetap hilangkan form (sesuai permintaan)
+//   }
 
-  $("playerName").value = "";
-  $("playerUnit").value = "";
-  $("playerHP").value = "";
-}
+//   $("playerName").value = "";
+//   $("playerUnit").value = "";
+//   $("playerHP").value = "";
+// }
 
 // Init game page
 async function initGame(){
@@ -705,6 +705,7 @@ function initAdmin(){
 // if(isAdminPage){
 //   initAdminPage();
 // }
+
 
 
 
