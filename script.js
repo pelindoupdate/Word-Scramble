@@ -226,7 +226,6 @@ function renderLeaderboard(rows){
       <div>${i+1}</div>
       <div>${escapeHtml(r.name||"")}</div>
       <div>${escapeHtml(r.unit||"")}</div>
-      <div>${escapeHtml(r.hp||"")}</div>
       <div class="right">${Number(r.score||0)}</div>
       <div class="right">${Number(r.seconds||0)}s</div>
     </div>
@@ -647,6 +646,7 @@ function initAdmin(){
 // if(isAdminPage){
 //   initAdminPage();
 // }
+
 
 
 
