@@ -361,6 +361,10 @@ button:active{ transform: translateY(1px); }
   color: var(--blue-900);
 }
 
+.row strong{
+  color: #1e40af;
+}
+
 .right{ text-align: right; }
 .rows{ display: block; }
 
@@ -466,5 +470,6 @@ button:active{ transform: translateY(1px); }
   .admin-top{ grid-template-columns: 1fr; }
   .admin-form{ grid-template-columns: 1fr; }
 }
+
 
 
