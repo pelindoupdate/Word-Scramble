@@ -250,18 +250,29 @@ function renderLeaderboard(rows){
     return;
   }
 
-  el.innerHTML = rows.slice(0,10).map((r,i)=>`
-    <div class="row">
-      <div>${i+1}</div>
-      <div>${escapeHtml(r.name||"")}</div>
-      <div>${escapeHtml(r.unit||"")}</div>
-      <div class="right">${Number(r.score||0)}</div>
-      <div class="right">${Number(r.seconds||0)}s</div>
-    </div>
-  `).join("");
+  el.innerHTML = rows.slice(0,10).map((r,i)=>{
+
+    // 🎖️ Tentukan piala untuk 5 besar
+    let trophy = "";
+    if(i === 0) trophy = " 🥇";
+    else if(i === 1) trophy = " 🥈";
+    else if(i === 2) trophy = " 🥉";
+    else if(i < 5) trophy = " 🏆";
+
+    return `
+      <div class="row">
+        <div>${i+1}</div>
+        <div><strong>${escapeHtml(r.name||"")}</strong>${trophy}</div>
+        <div>${escapeHtml(r.unit||"")}</div>
+        <div class="right">${Number(r.score||0)}</div>
+        <div class="right">${Number(r.seconds||0)}s</div>
+      </div>
+    `;
+  }).join("");
 
   localStorage.setItem(LS_TOP_FALLBACK, JSON.stringify(rows.slice(0,10)));
 }
+
 
 
 function loadFallbackTop(){
@@ -603,6 +614,7 @@ function initAdmin(){
   if(isGamePage) await initGame();
   if(isAdminPage) initAdmin();
 })();
+
 
 
 
