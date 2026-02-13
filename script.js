@@ -212,12 +212,41 @@ function toggleSound(){
 }
 
 // ---------- Leaderboard ----------
+// function renderLeaderboard(rows){
+//   const el = $("leaderboard");
+//   if(!el) return;
+
+//   if(!rows || !rows.length){
+//     el.innerHTML = `<div class="row"><div>-</div><div class="muted">Belum ada data</div><div class="muted">-</div><div class="right">-</div><div class="right">-</div></div>`;
+//     return;
+//   }
+
+//   el.innerHTML = rows.slice(0,10).map((r,i)=>`
+//     <div class="row">
+//       <div>${i+1}</div>
+//       <div>${escapeHtml(r.name||"")}</div>
+//       <div>${escapeHtml(r.unit||"")}</div>
+//       <div class="right">${Number(r.score||0)}</div>
+//       <div class="right">${Number(r.seconds||0)}s</div>
+//     </div>
+//   `).join("");
+
+//   localStorage.setItem(LS_TOP_FALLBACK, JSON.stringify(rows.slice(0,10)));
+// }
+
 function renderLeaderboard(rows){
   const el = $("leaderboard");
   if(!el) return;
 
   if(!rows || !rows.length){
-    el.innerHTML = `<div class="row"><div>-</div><div class="muted">Belum ada data</div><div class="muted">-</div><div class="right">-</div><div class="right">-</div></div>`;
+    el.innerHTML = `
+      <div class="row">
+        <div>-</div>
+        <div class="muted">Belum ada data</div>
+        <div class="muted">-</div>
+        <div class="right">-</div>
+        <div class="right">-</div>
+      </div>`;
     return;
   }
 
@@ -233,6 +262,7 @@ function renderLeaderboard(rows){
 
   localStorage.setItem(LS_TOP_FALLBACK, JSON.stringify(rows.slice(0,10)));
 }
+
 
 function loadFallbackTop(){
   try { return JSON.parse(localStorage.getItem(LS_TOP_FALLBACK)) || []; } catch { return []; }
@@ -288,6 +318,64 @@ function hideSaveForm(){
   if (note) note.classList.remove("hidden");
 }
 
+// async function handleSaveScore(e){
+//   e.preventDefault();
+
+//   const name = ($("playerName").value || "").trim();
+//   const unit = ($("playerUnit").value || "").trim();
+//   const hp = ($("playerHP").value || "").trim();
+
+//   if(!name){
+//     setMessage("Nama wajib diisi ✍️", "bad");
+//     $("playerName").focus();
+//     return;
+//   }
+
+//   // validasi HP hanya angka (opsional tapi recommended)
+//   if(hp && !/^[0-9]+$/.test(hp)){
+//     setMessage("No. HP hanya boleh angka ❗", "bad");
+//     $("playerHP").focus();
+//     return;
+//   }
+
+//   const secondsPlayed = 120 - timeLeft; // FIX (tadi 60 salah)
+  
+//   const payload = {
+//     name,
+//     unit,
+//     hp,              // ✅ TAMBAHKAN INI
+//     score,
+//     seconds: secondsPlayed,
+//     game: GAME,
+//     source:"web"
+//   };
+
+//   try{
+//     setMessage("Menyimpan skor…", "");
+//     const data = await apiPost({ action:"submit", ...payload });
+
+//     renderLeaderboard(data.top || []);
+//     setApiStatus("online", true);
+//     setMessage("Skor tersimpan ✅", "ok");
+
+//     hideSaveForm();
+//   } catch (err){
+//     const pending = loadPending();
+//     pending.push(payload);   // hp otomatis ikut tersimpan
+//     savePending(pending);
+
+//     setApiStatus("offline", false);
+//     setMessage("API offline. Skor disimpan lokal dan akan dicoba sync saat refresh ✅", "bad");
+
+//     hideSaveForm();
+//   }
+
+//   // reset form
+//   $("playerName").value = "";
+//   $("playerUnit").value = "";
+//   $("playerHP").value = "";   // ✅ TAMBAHKAN INI
+// }
+
 async function handleSaveScore(e){
   e.preventDefault();
 
@@ -301,19 +389,18 @@ async function handleSaveScore(e){
     return;
   }
 
-  // validasi HP hanya angka (opsional tapi recommended)
-  if(hp && !/^[0-9]+$/.test(hp)){
-    setMessage("No. HP hanya boleh angka ❗", "bad");
+  if(!hp){
+    setMessage("No. HP wajib diisi 📱", "bad");
     $("playerHP").focus();
     return;
   }
 
-  const secondsPlayed = 120 - timeLeft; // FIX (tadi 60 salah)
-  
+  const secondsPlayed = 120 - timeLeft;
+
   const payload = {
     name,
     unit,
-    hp,              // ✅ TAMBAHKAN INI
+    hp,              // ✅ disimpan ke database
     score,
     seconds: secondsPlayed,
     game: GAME,
@@ -323,60 +410,24 @@ async function handleSaveScore(e){
   try{
     setMessage("Menyimpan skor…", "");
     const data = await apiPost({ action:"submit", ...payload });
-
     renderLeaderboard(data.top || []);
     setApiStatus("online", true);
     setMessage("Skor tersimpan ✅", "ok");
-
     hideSaveForm();
   } catch (err){
     const pending = loadPending();
-    pending.push(payload);   // hp otomatis ikut tersimpan
+    pending.push(payload);
     savePending(pending);
-
     setApiStatus("offline", false);
-    setMessage("API offline. Skor disimpan lokal dan akan dicoba sync saat refresh ✅", "bad");
-
+    setMessage("API offline. Skor disimpan lokal.", "bad");
     hideSaveForm();
   }
 
-  // reset form
   $("playerName").value = "";
   $("playerUnit").value = "";
-  $("playerHP").value = "";   // ✅ TAMBAHKAN INI
+  $("playerHP").value = "";
 }
 
-// async function handleSaveScore(e){
-//   e.preventDefault();
-//   const name = ($("playerName").value || "").trim();
-//   const unit = ($("playerUnit").value || "").trim();
-//   const hp = ($("playerHP").value || "").trim();
-//   if(!name) { setMessage("Nama wajib diisi ✍️", "bad"); $("playerName").focus(); return; }
-
-//   const secondsPlayed = 60 - timeLeft;
-//   const payload = { name, unit, score, seconds: secondsPlayed, game: GAME, source:"web" };
-
-//   try{
-//     setMessage("Menyimpan skor…", "");
-//     const data = await apiPost({ action:"submit", ...payload });
-//     renderLeaderboard(data.top || []);
-//     setApiStatus("online", true);
-//     setMessage("Skor tersimpan ✅", "ok");
-//     hideSaveForm(); // (3)
-//   } catch (err){
-//     // offline fallback queue
-//     const pending = loadPending();
-//     pending.push(payload);
-//     savePending(pending);
-//     setApiStatus("offline", false);
-//     setMessage("API offline. Skor disimpan lokal dan akan dicoba sync saat refresh ✅", "bad");
-//     hideSaveForm(); // tetap hilangkan form (sesuai permintaan)
-//   }
-
-//   $("playerName").value = "";
-//   $("playerUnit").value = "";
-//   $("playerHP").value = "";
-// }
 
 // Init game page
 async function initGame(){
@@ -553,158 +604,8 @@ function initAdmin(){
   if(isAdminPage) initAdmin();
 })();
 
-// // ============================
-// // ADMIN PAGE: Load & Render Terms
-// // ============================
-// const isAdminPage = !!document.getElementById("termsTable");
 
-// function getAdminKey(){
-//   return (sessionStorage.getItem("cc_admin_key") || "").trim();
-// }
-// function setAdminKey(k){
-//   sessionStorage.setItem("cc_admin_key", String(k || "").trim());
-// }
 
-// function adminMsg(text, type=""){
-//   const el = document.getElementById("adminMsg");
-//   if(!el) return;
-//   el.textContent = text || "";
-//   el.className = "message";
-//   if(type) el.classList.add(type);
-// }
-
-// // API helpers (pastikan ini sudah ada di script.js kamu)
-// async function apiPost(payload) {
-//   const res = await fetch(API_URL, {
-//     method: "POST",
-//     headers: { "Content-Type": "text/plain;charset=utf-8" }, // anti CORS preflight
-//     body: JSON.stringify(payload),
-//   });
-//   const text = await res.text();
-//   let data;
-//   try { data = JSON.parse(text); } catch { data = { ok:false, error:"Bad JSON response", raw:text }; }
-//   if (!data.ok) throw new Error(data.error || "API error");
-//   return data;
-// }
-
-// function escapeHtml(s){
-//   return String(s)
-//     .replaceAll("&","&amp;")
-//     .replaceAll("<","&lt;")
-//     .replaceAll(">","&gt;")
-//     .replaceAll('"',"&quot;")
-//     .replaceAll("'","&#039;");
-// }
-
-// // (A) LOAD terms dari DB (sheet terms) via endpoint admin: terms_list
-// async function adminListTerms(){
-//   const adminKey = getAdminKey();
-//   if(!adminKey){
-//     adminMsg("Isi ADMIN KEY dulu lalu klik Simpan Key.", "bad");
-//     return;
-//   }
-
-//   try{
-//     adminMsg("Memuat daftar istilah…", "");
-//     const data = await apiPost({ action: "terms_list", adminKey });
-//     renderTermsTable(data.rows || []);
-//     adminMsg(`Berhasil memuat ${ (data.rows || []).length } istilah ✅`, "ok");
-//   } catch(e){
-//     adminMsg("Gagal memuat istilah: " + (e.message || e), "bad");
-//   }
-// }
-
-// // (B) RENDER ke kolom "Daftar Istilah" (#termsTable)
-// function renderTermsTable(rows){
-//   const el = document.getElementById("termsTable");
-//   if(!el) return;
-
-//   if(!rows.length){
-//     el.innerHTML = `
-//       <div class="row" style="grid-template-columns: 60px 1.5fr 1fr 1fr 130px;">
-//         <div>-</div>
-//         <div class="muted">Belum ada istilah di database</div>
-//         <div class="muted">-</div>
-//         <div class="muted">-</div>
-//         <div class="right muted">-</div>
-//       </div>
-//     `;
-//     return;
-//   }
-
-//   el.innerHTML = rows.map((r, i) => {
-//     const activeText = r.active ? "Active" : "Inactive";
-//     return `
-//       <div class="row" style="grid-template-columns: 60px 1.5fr 1fr 1fr 130px;">
-//         <div>${i + 1}</div>
-//         <div>${escapeHtml(r.term || "")}</div>
-//         <div>${escapeHtml(r.category || "")}</div>
-//         <div>${activeText}</div>
-//         <div class="right" style="display:flex; gap:8px; justify-content:flex-end;">
-//           <button class="ghost" data-toggle="${r.id}" data-active="${!r.active}">Toggle</button>
-//           <button class="danger" data-del="${r.id}">Hapus</button>
-//         </div>
-//       </div>
-//     `;
-//   }).join("");
-
-//   // wiring tombol toggle & hapus
-//   el.querySelectorAll("button[data-toggle]").forEach(btn => {
-//     btn.addEventListener("click", async () => {
-//       const adminKey = getAdminKey();
-//       const id = btn.getAttribute("data-toggle");
-//       const active = btn.getAttribute("data-active") === "true";
-//       try{
-//         await apiPost({ action:"terms_toggle", adminKey, id, active });
-//         await adminListTerms();
-//       } catch(e){
-//         adminMsg("Toggle gagal: " + (e.message || e), "bad");
-//       }
-//     });
-//   });
-
-//   el.querySelectorAll("button[data-del]").forEach(btn => {
-//     btn.addEventListener("click", async () => {
-//       const adminKey = getAdminKey();
-//       const id = btn.getAttribute("data-del");
-//       try{
-//         await apiPost({ action:"terms_delete", adminKey, id });
-//         await adminListTerms();
-//       } catch(e){
-//         adminMsg("Hapus gagal: " + (e.message || e), "bad");
-//       }
-//     });
-//   });
-// }
-
-// // (C) INIT admin page
-// function initAdminPage(){
-//   const keyInput = document.getElementById("adminKey");
-//   const saveKeyBtn = document.getElementById("saveKeyBtn");
-//   const refreshBtn = document.getElementById("refreshBtn");
-
-//   // isi input dengan key yang tersimpan (kalau ada)
-//   if(keyInput) keyInput.value = getAdminKey();
-
-//   if(saveKeyBtn){
-//     saveKeyBtn.addEventListener("click", () => {
-//       setAdminKey((keyInput.value || "").trim());
-//       adminMsg("Admin key tersimpan ✅", "ok");
-//       adminListTerms(); // auto load setelah save key
-//     });
-//   }
-
-//   if(refreshBtn){
-//     refreshBtn.addEventListener("click", adminListTerms);
-//   }
-
-//   // auto load jika key sudah ada
-//   if(getAdminKey()) adminListTerms();
-// }
-
-// if(isAdminPage){
-//   initAdminPage();
-// }
 
 
 
