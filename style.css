@@ -355,9 +355,9 @@ button:active{ transform: translateY(1px); }
   background: rgba(11,45,91,.03);
 }
 
-.row:nth-child(2){
+/* .row:nth-child(2){
   background: linear-gradient(90deg,#fff7ed,#ffedd5);
-}
+} */
 
 .row.head{
   background: rgba(11,45,91,.10);
@@ -474,6 +474,7 @@ button:active{ transform: translateY(1px); }
   .admin-top{ grid-template-columns: 1fr; }
   .admin-form{ grid-template-columns: 1fr; }
 }
+
 
 
 
