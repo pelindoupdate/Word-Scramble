@@ -211,85 +211,6 @@ function toggleSound(){
   } catch {}
 }
 
-function renderLeaderboard(rows){
-  const el = $("leaderboard");
-  if(!el) return;
-
-  if(!rows || !rows.length){
-    el.innerHTML = `
-      <div class="row">
-        <div>-</div>
-        <div class="muted">Belum ada data</div>
-        <div class="muted">-</div>
-        <div class="right">-</div>
-        <div class="right">-</div>
-      </div>`;
-    return;
-  }
-
-  // ===============================
-  // 🔥 FILTER DUPLIKAT NAMA
-  // ===============================
-  const bestByName = {};
-
-  rows.forEach(r=>{
-    const key = (r.name || "").toLowerCase().trim();
-    if(!key) return;
-
-    if(!bestByName[key]){
-      bestByName[key] = r;
-    }else{
-      const prev = bestByName[key];
-
-      // pilih skor tertinggi
-      if(
-        Number(r.score) > Number(prev.score) ||
-        (
-          Number(r.score) === Number(prev.score) &&
-          Number(r.seconds) < Number(prev.seconds)
-        )
-      ){
-        bestByName[key] = r;
-      }
-    }
-  });
-
-  // ubah kembali jadi array
-  const filtered = Object.values(bestByName);
-
-  // ===============================
-  // 🔥 SORT ULANG
-  // ===============================
-  filtered.sort((a,b)=>
-    (b.score - a.score) ||
-    (a.seconds - b.seconds)
-  );
-
-  // ===============================
-  // 🎖️ RENDER
-  // ===============================
-  el.innerHTML = filtered.slice(0,10).map((r,i)=>{
-
-    let trophy = "";
-    if(i === 0) trophy = " 🥇";
-    else if(i === 1) trophy = " 🥈";
-    else if(i === 2) trophy = " 🥉";
-    else if(i < 5) trophy = " 🏆";
-
-    return `
-      <div class="row">
-        <div>${i+1}</div>
-        <div><strong>${escapeHtml(r.name||"")}</strong>${trophy}</div>
-        <div>${escapeHtml(r.unit||"")}</div>
-        <div class="right">${Number(r.score||0)}</div>
-        <div class="right">${Number(r.seconds||0)}s</div>
-      </div>
-    `;
-  }).join("");
-
-  localStorage.setItem(LS_TOP_FALLBACK, JSON.stringify(filtered.slice(0,10)));
-}
-
 // function renderLeaderboard(rows){
 //   const el = $("leaderboard");
 //   if(!el) return;
@@ -305,6 +226,85 @@ function renderLeaderboard(rows){
 //       </div>`;
 //     return;
 //   }
+
+//   // ===============================
+//   // 🔥 FILTER DUPLIKAT NAMA
+//   // ===============================
+//   const bestByName = {};
+
+//   rows.forEach(r=>{
+//     const key = (r.name || "").toLowerCase().trim();
+//     if(!key) return;
+
+//     if(!bestByName[key]){
+//       bestByName[key] = r;
+//     }else{
+//       const prev = bestByName[key];
+
+//       // pilih skor tertinggi
+//       if(
+//         Number(r.score) > Number(prev.score) ||
+//         (
+//           Number(r.score) === Number(prev.score) &&
+//           Number(r.seconds) < Number(prev.seconds)
+//         )
+//       ){
+//         bestByName[key] = r;
+//       }
+//     }
+//   });
+
+//   // ubah kembali jadi array
+//   const filtered = Object.values(bestByName);
+
+//   // ===============================
+//   // 🔥 SORT ULANG
+//   // ===============================
+//   filtered.sort((a,b)=>
+//     (b.score - a.score) ||
+//     (a.seconds - b.seconds)
+//   );
+
+//   // ===============================
+//   // 🎖️ RENDER
+//   // ===============================
+//   el.innerHTML = filtered.slice(0,10).map((r,i)=>{
+
+//     let trophy = "";
+//     if(i === 0) trophy = " 🥇";
+//     else if(i === 1) trophy = " 🥈";
+//     else if(i === 2) trophy = " 🥉";
+//     else if(i < 5) trophy = " 🏆";
+
+//     return `
+//       <div class="row">
+//         <div>${i+1}</div>
+//         <div><strong>${escapeHtml(r.name||"")}</strong>${trophy}</div>
+//         <div>${escapeHtml(r.unit||"")}</div>
+//         <div class="right">${Number(r.score||0)}</div>
+//         <div class="right">${Number(r.seconds||0)}s</div>
+//       </div>
+//     `;
+//   }).join("");
+
+//   localStorage.setItem(LS_TOP_FALLBACK, JSON.stringify(filtered.slice(0,10)));
+// }
+
+function renderLeaderboard(rows){
+  const el = $("leaderboard");
+  if(!el) return;
+
+  if(!rows || !rows.length){
+    el.innerHTML = `
+      <div class="row">
+        <div>-</div>
+        <div class="muted">Belum ada data</div>
+        <div class="muted">-</div>
+        <div class="right">-</div>
+        <div class="right">-</div>
+      </div>`;
+    return;
+  }
 
   el.innerHTML = rows.slice(0,10).map((r,i)=>{
 
@@ -607,6 +607,7 @@ function initAdmin(){
   if(isGamePage) await initGame();
   if(isAdminPage) initAdmin();
 })();
+
 
 
 
