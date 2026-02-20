@@ -292,6 +292,60 @@ function toggleSound(){
 //   localStorage.setItem(LS_TOP_FALLBACK, JSON.stringify(rows.slice(0,10)));
 // }
 
+// function renderLeaderboard(rows){
+//   const el = $("leaderboard");
+//   if(!el) return;
+
+//   if(!rows || !rows.length){
+//     el.innerHTML = `
+//       <div class="row">
+//         <div>-</div>
+//         <div class="muted">Belum ada data</div>
+//         <div class="muted">-</div>
+//         <div class="right">-</div>
+//         <div class="right">-</div>
+//       </div>`;
+//     return;
+//   }
+
+//   // ==========================
+//   // 🔥 Filter nama unik, pilih score tertinggi
+//   // ==========================
+//   const uniqueMap = {};
+//   rows.forEach(r => {
+//     const key = normalize(r.name);
+//     if (!uniqueMap[key] || r.score > uniqueMap[key].score || 
+//        (r.score === uniqueMap[key].score && r.seconds < uniqueMap[key].seconds)) {
+//       uniqueMap[key] = r; // pilih score tertinggi, tie-breaker: waktu tercepat
+//     }
+//   });
+
+//   const uniqueRows = Object.values(uniqueMap);
+//   uniqueRows.sort((a,b) => (b.score - a.score) || (a.seconds - b.seconds));
+
+//   el.innerHTML = uniqueRows.slice(0,10).map((r,i)=>{
+
+//     // 🎖️ Tentukan piala untuk 5 besar
+//     let trophy = "";
+//     if(i === 0) trophy = " 🥇";
+//     else if(i === 1) trophy = " 🥈";
+//     else if(i === 2) trophy = " 🥉";
+//     else if(i < 5) trophy = " 🏆";
+
+//     return `
+//       <div class="row">
+//         <div>${i+1}</div>
+//         <div><strong>${escapeHtml(r.name||"")}</strong>${trophy}</div>
+//         <div>${escapeHtml(r.unit||"")}</div>
+//         <div class="right">${Number(r.score||0)}</div>
+//         <div class="right">${Number(r.seconds||0)}s</div>
+//       </div>
+//     `;
+//   }).join("");
+
+//   localStorage.setItem(LS_TOP_FALLBACK, JSON.stringify(uniqueRows.slice(0,10)));
+// }
+
 function renderLeaderboard(rows){
   const el = $("leaderboard");
   if(!el) return;
@@ -314,16 +368,23 @@ function renderLeaderboard(rows){
   const uniqueMap = {};
   rows.forEach(r => {
     const key = normalize(r.name);
+    // pilih score tertinggi, tie-breaker: waktu tercepat
     if (!uniqueMap[key] || r.score > uniqueMap[key].score || 
        (r.score === uniqueMap[key].score && r.seconds < uniqueMap[key].seconds)) {
-      uniqueMap[key] = r; // pilih score tertinggi, tie-breaker: waktu tercepat
+      uniqueMap[key] = r;
     }
   });
 
-  const uniqueRows = Object.values(uniqueMap);
+  // Ambil semua unik, sort by score desc
+  let uniqueRows = Object.values(uniqueMap);
   uniqueRows.sort((a,b) => (b.score - a.score) || (a.seconds - b.seconds));
 
-  el.innerHTML = uniqueRows.slice(0,10).map((r,i)=>{
+  // ==========================
+  // 🔥 Ambil 10 pemain berbeda (top 10)
+  // ==========================
+  uniqueRows = uniqueRows.slice(0,10);
+
+  el.innerHTML = uniqueRows.map((r,i)=>{
 
     // 🎖️ Tentukan piala untuk 5 besar
     let trophy = "";
@@ -343,7 +404,7 @@ function renderLeaderboard(rows){
     `;
   }).join("");
 
-  localStorage.setItem(LS_TOP_FALLBACK, JSON.stringify(uniqueRows.slice(0,10)));
+  localStorage.setItem(LS_TOP_FALLBACK, JSON.stringify(uniqueRows));
 }
 
 
@@ -623,6 +684,7 @@ function initAdmin(){
   if(isGamePage) await initGame();
   if(isAdminPage) initAdmin();
 })();
+
 
 
 
