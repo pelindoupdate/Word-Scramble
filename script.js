@@ -155,6 +155,29 @@ function playSfx(type){
   try { el.currentTime = 0; el.play(); } catch {}
 }
 
+// function submitAnswer(){
+//   if(!current) return;
+//   const guess = normalize($("answerInput").value);
+//   const correct = normalize(current.term);
+//   if(!guess) return setMessage("Isi jawaban dulu ✍️", "bad");
+
+//   if(guess === correct){
+//     const bonus = Math.min(5, streak);
+//     applyScore(10 + bonus);
+//     streak++;
+//     updateStats();
+//     setMessage(`Benar! +10 +${bonus} 🎉`, "ok");
+//     playSfx("correct");
+//     nextPuzzle();
+//   } else {
+//     streak = 0;
+//     updateStats();
+//     setMessage("Belum tepat. Coba lagi 😺", "bad");
+//     playSfx("wrong");
+//     $("answerInput").select();
+//   }
+// }
+
 function submitAnswer(){
   if(!current) return;
   const guess = normalize($("answerInput").value);
@@ -162,11 +185,28 @@ function submitAnswer(){
   if(!guess) return setMessage("Isi jawaban dulu ✍️", "bad");
 
   if(guess === correct){
-    const bonus = Math.min(5, streak);
-    applyScore(10 + bonus);
+    // ==========================
+    // 🎯 Hitung score berdasarkan level
+    // ==========================
+    let baseScore = 0;
+    const level = (current.level || "easy").toLowerCase();
+    if(level === "easy") baseScore = 5;
+    else if(level === "medium") baseScore = 10;
+    else if(level === "hard") baseScore = 20;
+
     streak++;
+    
+    // ==========================
+    // 🎯 Bonus strike
+    // ==========================
+    let bonus = 0;
+    if(streak === 5) bonus += 50;
+    else if(streak === 10) bonus += 200;
+
+    applyScore(baseScore + bonus);
     updateStats();
-    setMessage(`Benar! +10 +${bonus} 🎉`, "ok");
+
+    setMessage(`Benar! +${baseScore}${bonus ? " +"+bonus+" (strike!)" : ""} 🎉`, "ok");
     playSfx("correct");
     nextPuzzle();
   } else {
@@ -583,6 +623,7 @@ function initAdmin(){
   if(isGamePage) await initGame();
   if(isAdminPage) initAdmin();
 })();
+
 
 
 
