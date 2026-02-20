@@ -268,51 +268,24 @@ function renderLeaderboard(rows){
     return;
   }
 
-  // =========================================
-  // 🔥 FILTER DUPLIKAT NAMA (AMBIL TERBAIK)
-  // =========================================
-  const bestByName = {};
-
-  rows.forEach(r=>{
-    const key = (r.name || "").trim().toLowerCase();
-    if(!key) return;
-
-    if(!bestByName[key]){
-      bestByName[key] = r;
-    } else {
-      const prev = bestByName[key];
-
-      const better =
-        Number(r.score) > Number(prev.score) ||
-        (
-          Number(r.score) === Number(prev.score) &&
-          Number(r.seconds) < Number(prev.seconds)
-        );
-
-      if(better){
-        bestByName[key] = r;
-      }
+  // ==========================
+  // 🔥 Filter nama unik, pilih score tertinggi
+  // ==========================
+  const uniqueMap = {};
+  rows.forEach(r => {
+    const key = normalize(r.name);
+    if (!uniqueMap[key] || r.score > uniqueMap[key].score || 
+       (r.score === uniqueMap[key].score && r.seconds < uniqueMap[key].seconds)) {
+      uniqueMap[key] = r; // pilih score tertinggi, tie-breaker: waktu tercepat
     }
   });
 
-  // ubah kembali jadi array
-  const filtered = Object.values(bestByName);
+  const uniqueRows = Object.values(uniqueMap);
+  uniqueRows.sort((a,b) => (b.score - a.score) || (a.seconds - b.seconds));
 
-  // =========================================
-  // 🔥 SORT ULANG
-  // =========================================
-  filtered.sort((a,b)=>
-    (Number(b.score) - Number(a.score)) ||
-    (Number(a.seconds) - Number(b.seconds))
-  );
+  el.innerHTML = uniqueRows.slice(0,10).map((r,i)=>{
 
-  // =========================================
-  // 🎖️ RENDER TOP 10
-  // =========================================
-  const top10 = filtered.slice(0,10);
-
-  el.innerHTML = top10.map((r,i)=>{
-
+    // 🎖️ Tentukan piala untuk 5 besar
     let trophy = "";
     if(i === 0) trophy = " 🥇";
     else if(i === 1) trophy = " 🥈";
@@ -330,7 +303,7 @@ function renderLeaderboard(rows){
     `;
   }).join("");
 
-  localStorage.setItem(LS_TOP_FALLBACK, JSON.stringify(top10));
+  localStorage.setItem(LS_TOP_FALLBACK, JSON.stringify(uniqueRows.slice(0,10)));
 }
 
 
@@ -610,6 +583,7 @@ function initAdmin(){
   if(isGamePage) await initGame();
   if(isAdminPage) initAdmin();
 })();
+
 
 
 
