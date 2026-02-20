@@ -1,0 +1,107 @@
+gan<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Pelindo Scramble | Challenge Corner</title>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+
+<header class="hero">
+  <div class="hero-left">
+    <div>
+      <h1>CHALLENGE CORNER</h1>
+      <h2>Pelindo Scramble</h2>
+      <p>Susun rangkaian huruf acak yang muncul membentuk susunan kata istilah dalam dunia kepelabuhanan </p>
+    </div>
+  </div>
+
+  <!-- (4) Logo Pelindo pojok kanan atas -->
+  <div class="hero-right">
+    <img class="logo" src="assets/pelindo-logo.png" alt="Pelindo Logo">
+  </div>
+</header>
+
+<main class="container">
+
+  <section class="panel card">
+    <div class="panel-head">
+      <h3>🔀 Game</h3>
+      <div class="stats">
+        <div class="stat"><span class="label">Skor</span><span id="score" class="value">0</span></div>
+        <div class="stat"><span class="label">Streak</span><span id="streak" class="value">0</span></div>
+        <div class="stat"><span class="label">Waktu</span><span id="time" class="value">120</span></div>
+      </div>
+    </div>
+
+    <div class="game-box">
+      <div class="topline">
+        <div class="chip" id="categoryChip">Keterangan: -</div>
+        <button class="ghost" id="soundBtn" type="button">🔊 Sound: OFF</button>
+      </div>
+
+      <div class="scramble" id="scrambleText">—</div>
+
+      <div class="input-row">
+        <input id="answerInput" type="text" placeholder="Ketik jawaban..." autocomplete="off"/>
+        <button id="submitBtn">Kirim</button>
+      </div>
+
+      <div class="actions">
+        <button class="ghost" id="hintBtn" type="button">💡 Hint (-5)</button>
+        <button class="ghost" id="skipBtn" type="button">⏭️ Skip (-3)</button>
+        <button class="danger" id="resetBtn" type="button">🔄 Ulang</button>
+      </div>
+
+      <div id="message" class="message"></div>
+    </div>
+  </section>
+
+  <section class="panel card">
+    <div class="panel-head">
+      <h3>🏅 Leaderboard Top 10</h3>
+      <div class="mini-note">Status : <span id="apiStatus" class="badge">checking…</span></div>
+    </div>
+
+    <!-- (3) Setelah simpan score, form ini akan otomatis hilang -->
+    <form id="saveForm" class="save-form">
+      <input id="playerName" type="text" maxlength="12" placeholder="Nama Lengkap" />
+      <input id="playerUnit" type="text" maxlength="40" placeholder="Unit Kerja/Entitas" />
+      <input id="playerHP" type="text" maxlength="12" placeholder="No. HP" />
+      <button id="saveBtn" type="submit">Simpan Skor</button>
+    </form>
+
+    <div class="table">
+      <div class="row head">
+        <div>#</div><div>Nama</div><div>Unit</div><div class="right">Skor</div><div class="right">Waktu</div>
+      </div>
+      <div id="leaderboard" class="rows"></div>
+    </div>
+
+    <div id="afterSaveNote" class="hint-box hidden">
+      <small class="muted">Terima kasih! Skor sudah tercatat. Kamu bisa pantau leaderboard di sini ✅</small>
+    </div>
+  </section>
+
+</main>
+
+<!-- (5)(6) Audio -->
+<audio id="bgm" src="assets/bgm.mp3" loop preload="auto"></audio>
+<audio id="sfxCorrect" src="assets/correct.mp3" preload="auto"></audio>
+<audio id="sfxWrong" src="assets/wrong.mp3" preload="auto"></audio>
+
+<script src="script.js"></script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
