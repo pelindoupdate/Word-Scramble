@@ -211,6 +211,8 @@ function toggleSound(){
   } catch {}
 }
 
+
+
 // function renderLeaderboard(rows){
 //   const el = $("leaderboard");
 //   if(!el) return;
@@ -227,49 +229,9 @@ function toggleSound(){
 //     return;
 //   }
 
-//   // ===============================
-//   // 🔥 FILTER DUPLIKAT NAMA
-//   // ===============================
-//   const bestByName = {};
+//   el.innerHTML = rows.slice(0,10).map((r,i)=>{
 
-//   rows.forEach(r=>{
-//     const key = (r.name || "").toLowerCase().trim();
-//     if(!key) return;
-
-//     if(!bestByName[key]){
-//       bestByName[key] = r;
-//     }else{
-//       const prev = bestByName[key];
-
-//       // pilih skor tertinggi
-//       if(
-//         Number(r.score) > Number(prev.score) ||
-//         (
-//           Number(r.score) === Number(prev.score) &&
-//           Number(r.seconds) < Number(prev.seconds)
-//         )
-//       ){
-//         bestByName[key] = r;
-//       }
-//     }
-//   });
-
-//   // ubah kembali jadi array
-//   const filtered = Object.values(bestByName);
-
-//   // ===============================
-//   // 🔥 SORT ULANG
-//   // ===============================
-//   filtered.sort((a,b)=>
-//     (b.score - a.score) ||
-//     (a.seconds - b.seconds)
-//   );
-
-//   // ===============================
-//   // 🎖️ RENDER
-//   // ===============================
-//   el.innerHTML = filtered.slice(0,10).map((r,i)=>{
-
+//     // 🎖️ Tentukan piala untuk 5 besar
 //     let trophy = "";
 //     if(i === 0) trophy = " 🥇";
 //     else if(i === 1) trophy = " 🥈";
@@ -287,7 +249,7 @@ function toggleSound(){
 //     `;
 //   }).join("");
 
-//   localStorage.setItem(LS_TOP_FALLBACK, JSON.stringify(filtered.slice(0,10)));
+//   localStorage.setItem(LS_TOP_FALLBACK, JSON.stringify(rows.slice(0,10)));
 // }
 
 function renderLeaderboard(rows){
@@ -306,9 +268,51 @@ function renderLeaderboard(rows){
     return;
   }
 
-  el.innerHTML = rows.slice(0,10).map((r,i)=>{
+  // =========================================
+  // 🔥 FILTER DUPLIKAT NAMA (AMBIL TERBAIK)
+  // =========================================
+  const bestByName = {};
 
-    // 🎖️ Tentukan piala untuk 5 besar
+  rows.forEach(r=>{
+    const key = (r.name || "").trim().toLowerCase();
+    if(!key) return;
+
+    if(!bestByName[key]){
+      bestByName[key] = r;
+    } else {
+      const prev = bestByName[key];
+
+      const better =
+        Number(r.score) > Number(prev.score) ||
+        (
+          Number(r.score) === Number(prev.score) &&
+          Number(r.seconds) < Number(prev.seconds)
+        );
+
+      if(better){
+        bestByName[key] = r;
+      }
+    }
+  });
+
+  // ubah kembali jadi array
+  const filtered = Object.values(bestByName);
+
+  // =========================================
+  // 🔥 SORT ULANG
+  // =========================================
+  filtered.sort((a,b)=>
+    (Number(b.score) - Number(a.score)) ||
+    (Number(a.seconds) - Number(b.seconds))
+  );
+
+  // =========================================
+  // 🎖️ RENDER TOP 10
+  // =========================================
+  const top10 = filtered.slice(0,10);
+
+  el.innerHTML = top10.map((r,i)=>{
+
     let trophy = "";
     if(i === 0) trophy = " 🥇";
     else if(i === 1) trophy = " 🥈";
@@ -326,9 +330,8 @@ function renderLeaderboard(rows){
     `;
   }).join("");
 
-  localStorage.setItem(LS_TOP_FALLBACK, JSON.stringify(rows.slice(0,10)));
+  localStorage.setItem(LS_TOP_FALLBACK, JSON.stringify(top10));
 }
-
 
 
 function loadFallbackTop(){
@@ -607,6 +610,7 @@ function initAdmin(){
   if(isGamePage) await initGame();
   if(isAdminPage) initAdmin();
 })();
+
 
 
 
