@@ -1,7 +1,8 @@
 // ============================
 // CONFIG
 // ============================
-const API_URL = "https://script.google.com/macros/s/AKfycbyJv-8G2ni8gJ-GWJlL3VqaHLIzTM7pNu4b6ZPDbu32hHZzE55JDRatWt1qn89T1jTsQQ/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbyLYN2qnlBMHrnb3N6cTP0FXoNRAAFRRNkD_NwKhiTf7MrhDMYba5BLaWNXEON7V1R48g/exec";
+  // "https://script.google.com/macros/s/AKfycbyJv-8G2ni8gJ-GWJlL3VqaHLIzTM7pNu4b6ZPDbu32hHZzE55JDRatWt1qn89T1jTsQQ/exec";
 
 const GAME = "SCRAMBLE";
 
@@ -684,6 +685,7 @@ function initAdmin(){
   if(isGamePage) await initGame();
   if(isAdminPage) initAdmin();
 })();
+
 
 
 
